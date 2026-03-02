@@ -22,6 +22,8 @@ export default function AdminDashboard() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
   const [selectedWeek, setSelectedWeek] = useState(null);
+  const [divisionFilter, setDivisionFilter] = useState('all');
+  const [sortOrder, setSortOrder] = useState('alpha');
   const queryClient = useQueryClient();
 
   const { data: schedules = [], isLoading: schedulesLoading } = useQuery({
