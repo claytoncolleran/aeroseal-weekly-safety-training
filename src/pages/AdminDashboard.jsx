@@ -103,6 +103,18 @@ export default function AdminDashboard() {
     },
   });
 
+  const editMemberMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.TeamMember.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['teamMembers'] });
+    },
+  });
+
+  const handleEditMember = (member) => {
+    setEditingMember(member);
+    setEditDialogOpen(true);
+  };
+
   const markCompleteMutation = useMutation({
     mutationFn: async (member) => {
       await base44.entities.TrainingCompletion.create({
