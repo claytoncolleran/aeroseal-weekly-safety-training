@@ -17,6 +17,7 @@ export default function AddTeamMemberDialog({ open, onOpenChange, onAdd }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [division, setDivision] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
