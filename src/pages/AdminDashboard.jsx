@@ -12,6 +12,7 @@ import {
 import { format, parseISO, isBefore, startOfDay } from 'date-fns';
 import TeamMemberCard from '@/components/admin/TeamMemberCard';
 import AddTeamMemberDialog from '@/components/admin/AddTeamMemberDialog';
+import EditTeamMemberDialog from '@/components/admin/EditTeamMemberDialog';
 import WeekSelector from '@/components/admin/WeekSelector';
 import VideoScheduleTab from '@/components/schedule/VideoScheduleTab';
 
