@@ -360,6 +360,9 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
+          <TabsContent value="schedule">
+            <VideoScheduleTab />
+          </TabsContent>
         </Tabs>
       </div>
 
