@@ -147,22 +147,38 @@ export default function VideoScheduleTab() {
 
       {/* Weekly Schedule Grid */}
       <Card className="border-0 shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg">{selectedYear} Weekly Schedule</CardTitle>
+        <CardHeader
+          className="pb-3 cursor-pointer select-none"
+          onClick={() => setScheduleOpen(o => !o)}
+        >
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">{selectedYear} Weekly Schedule</CardTitle>
+            <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform ${scheduleOpen ? '' : '-rotate-90'}`} />
+          </div>
         </CardHeader>
-        <CardContent className="p-0 pb-4">
-          <WeeklyScheduleGrid year={selectedYear} />
-        </CardContent>
+        {scheduleOpen && (
+          <CardContent className="p-0 pb-4">
+            <WeeklyScheduleGrid year={selectedYear} />
+          </CardContent>
+        )}
       </Card>
 
       {/* Video Library */}
       <Card className="border-0 shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Video Library</CardTitle>
+        <CardHeader
+          className="pb-3 cursor-pointer select-none"
+          onClick={() => setLibraryOpen(o => !o)}
+        >
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">Video Library</CardTitle>
+            <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform ${libraryOpen ? '' : '-rotate-90'}`} />
+          </div>
         </CardHeader>
-        <CardContent>
-          <VideoLibraryGrid />
-        </CardContent>
+        {libraryOpen && (
+          <CardContent>
+            <VideoLibraryGrid />
+          </CardContent>
+        )}
       </Card>
     </div>
   );
