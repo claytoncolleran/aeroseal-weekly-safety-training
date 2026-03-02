@@ -13,6 +13,7 @@ import { format, parseISO, isBefore, startOfDay } from 'date-fns';
 import TeamMemberCard from '@/components/admin/TeamMemberCard';
 import AddTeamMemberDialog from '@/components/admin/AddTeamMemberDialog';
 import WeekSelector from '@/components/admin/WeekSelector';
+import VideoScheduleTab from '@/components/schedule/VideoScheduleTab';
 
 export default function AdminDashboard() {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
