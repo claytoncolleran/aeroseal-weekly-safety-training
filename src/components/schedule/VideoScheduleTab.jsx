@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, CalendarDays, ChevronRight } from 'lucide-react';
+import { Loader2, CalendarDays, ChevronRight, ChevronDown } from 'lucide-react';
 import WeeklyScheduleGrid from './WeeklyScheduleGrid';
 import VideoLibraryGrid from './VideoLibraryGrid';
 
