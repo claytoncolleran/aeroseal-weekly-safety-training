@@ -283,7 +283,34 @@ export default function AdminDashboard() {
           <TabsContent value="status">
             <Card className="border-0 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-lg">Week {selectedWeek} Completion Status</CardTitle>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <CardTitle className="text-lg">Week {selectedWeek} Completion Status</CardTitle>
+                  <div className="flex items-center gap-2">
+                    <Filter className="w-4 h-4 text-slate-400 shrink-0" />
+                    <Select value={divisionFilter} onValueChange={setDivisionFilter}>
+                      <SelectTrigger className="w-36 h-8 text-sm">
+                        <SelectValue placeholder="Division" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Divisions</SelectItem>
+                        <SelectItem value="East">East</SelectItem>
+                        <SelectItem value="Midwest">Midwest</SelectItem>
+                        <SelectItem value="Southwest">Southwest</SelectItem>
+                        <SelectItem value="Mountain">Mountain</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <ArrowUpDown className="w-4 h-4 text-slate-400 shrink-0" />
+                    <Select value={sortOrder} onValueChange={setSortOrder}>
+                      <SelectTrigger className="w-44 h-8 text-sm">
+                        <SelectValue placeholder="Sort" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="alpha">Alphabetical</SelectItem>
+                        <SelectItem value="recent">Most Recently Completed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
                 {activeMembers.length === 0 ? (
@@ -298,9 +325,14 @@ export default function AdminDashboard() {
                       Add First Team Member
                     </Button>
                   </div>
+                ) : filteredAndSortedMembers.length === 0 ? (
+                  <div className="text-center py-12 text-slate-500">
+                    <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No members in this division.</p>
+                  </div>
                 ) : (
                   <div className="space-y-3">
-                    {activeMembers.map((member) => (
+                    {filteredAndSortedMembers.map((member) => (
                       <TeamMemberCard
                         key={member.id}
                         member={member}
