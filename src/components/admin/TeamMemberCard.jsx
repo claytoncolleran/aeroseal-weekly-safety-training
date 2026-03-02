@@ -39,6 +39,9 @@ export default function TeamMemberCard({
         <div>
           <p className="font-medium text-slate-800">{member.name}</p>
           <p className="text-sm text-slate-500">{member.email}</p>
+          {member.division && (
+            <p className="text-xs text-slate-400 mt-0.5">{member.division}</p>
+          )}
         </div>
       </div>
 
