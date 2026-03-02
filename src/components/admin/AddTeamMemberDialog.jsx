@@ -84,6 +84,20 @@ export default function AddTeamMemberDialog({ open, onOpenChange, onAdd }) {
               placeholder="(555) 123-4567"
             />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="division">Division</Label>
+            <Select value={division} onValueChange={setDivision}>
+              <SelectTrigger id="division">
+                <SelectValue placeholder="Select a division" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="East">East</SelectItem>
+                <SelectItem value="Midwest">Midwest</SelectItem>
+                <SelectItem value="Southwest">Southwest</SelectItem>
+                <SelectItem value="Mountain">Mountain</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           {error && (
             <p className="text-red-500 text-sm">{error}</p>
           )}
