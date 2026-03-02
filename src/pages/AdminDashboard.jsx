@@ -400,6 +400,12 @@ export default function AdminDashboard() {
         onOpenChange={setAddDialogOpen}
         onAdd={(data) => addMemberMutation.mutateAsync(data)}
       />
+      <EditTeamMemberDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        member={editingMember}
+        onSave={(id, data) => editMemberMutation.mutateAsync({ id, data })}
+      />
     </div>
   );
 }
