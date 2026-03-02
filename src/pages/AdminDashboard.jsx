@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Loader2, Users, PlayCircle, CheckCircle2, Clock, 
-  UserPlus, Calendar, TrendingUp, AlertCircle 
+  UserPlus, Calendar, TrendingUp, AlertCircle, Pencil
 } from 'lucide-react';
 import { format, parseISO, isBefore, startOfDay } from 'date-fns';
 import TeamMemberCard from '@/components/admin/TeamMemberCard';
