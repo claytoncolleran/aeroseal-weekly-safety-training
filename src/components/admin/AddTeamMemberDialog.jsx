@@ -35,10 +35,11 @@ export default function AddTeamMemberDialog({ open, onOpenChange, onAdd }) {
       // Invite to Base44 (sends password setup email)
       await base44.users.inviteUser(email.trim(), 'user');
       // Create TeamMember record automatically
-      await onAdd({ name: name.trim(), email: email.trim(), phone: phone.trim() || undefined, is_active: true });
+      await onAdd({ name: name.trim(), email: email.trim(), phone: phone.trim() || undefined, division: division || undefined, is_active: true });
       setName('');
       setEmail('');
       setPhone('');
+      setDivision('');
       onOpenChange(false);
     } catch (err) {
       setError(err?.message || 'Failed to add team member. Please try again.');
