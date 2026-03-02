@@ -30,6 +30,8 @@ export default function VideoScheduleTab() {
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [generating, setGenerating] = useState(false);
   const [generatingNext, setGeneratingNext] = useState(false);
+  const [scheduleOpen, setScheduleOpen] = useState(true);
+  const [libraryOpen, setLibraryOpen] = useState(true);
   const queryClient = useQueryClient();
 
   const { data: library = [] } = useQuery({
