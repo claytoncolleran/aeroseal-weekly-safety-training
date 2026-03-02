@@ -360,15 +360,28 @@ export default function AdminDashboard() {
                           {member.phone && (
                             <p className="text-sm text-slate-400">{member.phone}</p>
                           )}
+                          {member.division && (
+                            <p className="text-xs text-slate-400">{member.division}</p>
+                          )}
                         </div>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                          onClick={() => deleteMemberMutation.mutate(member.id)}
-                        >
-                          Remove
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            className="h-8 w-8 text-slate-500 hover:text-slate-700"
+                            onClick={() => handleEditMember(member)}
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                            onClick={() => deleteMemberMutation.mutate(member.id)}
+                          >
+                            Remove
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>
