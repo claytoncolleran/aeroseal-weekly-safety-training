@@ -1,0 +1,371 @@
+import React, { useState, useMemo, useEffect } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Loader2, Users, PlayCircle, CheckCircle2, Clock, 
+  UserPlus, Calendar, TrendingUp, AlertCircle 
+} from 'lucide-react';
+import { format, parseISO, isBefore, startOfDay } from 'date-fns';
+import TeamMemberCard from '@/components/admin/TeamMemberCard';
+import AddTeamMemberDialog from '@/components/admin/AddTeamMemberDialog';
+import WeekSelector from '@/components/admin/WeekSelector';
+
+export default function AdminDashboard() {
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [selectedWeek, setSelectedWeek] = useState(null);
+  const queryClient = useQueryClient();
+
+  const { data: schedules = [], isLoading: schedulesLoading } = useQuery({
+    queryKey: ['schedules'],
+    queryFn: () => base44.entities.TrainingSchedule.list('week_number'),
+  });
+
+  const { data: teamMembers = [], isLoading: membersLoading } = useQuery({
+    queryKey: ['teamMembers'],
+    queryFn: () => base44.entities.TeamMember.list(),
+  });
+
+  const { data: completions = [], isLoading: completionsLoading } = useQuery({
+    queryKey: ['completions'],
+    queryFn: () => base44.entities.TrainingCompletion.list(),
+  });
+
+  // Determine current week's training
+  const currentWeekNumber = useMemo(() => {
+    if (schedules.length === 0) return 1;
+    
+    const today = startOfDay(new Date());
+    const sortedSchedules = [...schedules].sort((a, b) => 
+      new Date(a.scheduled_date) - new Date(b.scheduled_date)
+    );
+
+    let current = sortedSchedules[0]?.week_number || 1;
+    for (const schedule of sortedSchedules) {
+      const scheduleDate = startOfDay(parseISO(schedule.scheduled_date));
+      if (!isBefore(today, scheduleDate)) {
+        current = schedule.week_number;
+      } else {
+        break;
+      }
+    }
+    return current;
+  }, [schedules]);
+
+  // Set initial selected week
+  useEffect(() => {
+    if (selectedWeek === null && currentWeekNumber) {
+      setSelectedWeek(currentWeekNumber);
+    }
+  }, [currentWeekNumber, selectedWeek]);
+
+  const currentSchedule = useMemo(() => {
+    return schedules.find(s => s.week_number === selectedWeek);
+  }, [schedules, selectedWeek]);
+
+  // Get completions for selected week
+  const weekCompletions = useMemo(() => {
+    return completions.filter(c => c.week_number === selectedWeek);
+  }, [completions, selectedWeek]);
+
+  // Active team members
+  const activeMembers = useMemo(() => {
+    return teamMembers.filter(m => m.is_active !== false);
+  }, [teamMembers]);
+
+  // Completion stats
+  const stats = useMemo(() => {
+    const completed = weekCompletions.length;
+    const total = activeMembers.length;
+    const pending = total - completed;
+    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+    return { completed, total, pending, percentage };
+  }, [weekCompletions, activeMembers]);
+
+  const addMemberMutation = useMutation({
+    mutationFn: (data) => base44.entities.TeamMember.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['teamMembers'] });
+    },
+  });
+
+  const deleteMemberMutation = useMutation({
+    mutationFn: (id) => base44.entities.TeamMember.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['teamMembers'] });
+    },
+  });
+
+  const markCompleteMutation = useMutation({
+    mutationFn: async (member) => {
+      await base44.entities.TrainingCompletion.create({
+        team_member_id: member.id,
+        team_member_name: member.name,
+        week_number: selectedWeek,
+        video_title: currentSchedule?.video_title || '',
+        description: 'Manually marked complete by administrator',
+        acknowledged: true,
+        completion_date: new Date().toISOString(),
+        marked_by_admin: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['completions'] });
+    },
+  });
+
+  const isLoading = schedulesLoading || membersLoading || completionsLoading;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+      </div>
+    );
+  }
+
+  const getMemberCompletion = (memberId) => {
+    return weekCompletions.find(c => c.team_member_id === memberId);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
+            <p className="text-slate-500 mt-1">Manage team training and track completions</p>
+          </div>
+          <Button 
+            onClick={() => setAddDialogOpen(true)}
+            className="bg-emerald-600 hover:bg-emerald-700"
+          >
+            <UserPlus className="w-4 h-4 mr-2" />
+            Add Team Member
+          </Button>
+        </div>
+
+        {/* Week Selector & Current Training */}
+        <Card className="mb-6 border-0 shadow-sm">
+          <CardContent className="p-6">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <WeekSelector
+                schedules={schedules}
+                selectedWeek={selectedWeek}
+                onSelectWeek={setSelectedWeek}
+                currentWeek={currentWeekNumber}
+              />
+              {currentSchedule && (
+                <div className="flex items-center gap-3">
+                  <PlayCircle className="w-5 h-5 text-emerald-600" />
+                  <span className="text-slate-700 font-medium truncate max-w-md">
+                    {currentSchedule.video_title}
+                  </span>
+                  {selectedWeek === currentWeekNumber && (
+                    <Badge className="bg-emerald-100 text-emerald-700">Current Week</Badge>
+                  )}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500 font-medium">Team Members</p>
+                  <p className="text-3xl font-bold text-slate-900 mt-1">{stats.total}</p>
+                </div>
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <Users className="w-6 h-6 text-blue-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500 font-medium">Completed</p>
+                  <p className="text-3xl font-bold text-emerald-600 mt-1">{stats.completed}</p>
+                </div>
+                <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                  <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500 font-medium">Pending</p>
+                  <p className="text-3xl font-bold text-amber-500 mt-1">{stats.pending}</p>
+                </div>
+                <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                  <Clock className="w-6 h-6 text-amber-500" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500 font-medium">Completion Rate</p>
+                  <p className="text-3xl font-bold text-slate-900 mt-1">{stats.percentage}%</p>
+                </div>
+                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-purple-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Team Status */}
+        <Tabs defaultValue="status" className="space-y-6">
+          <TabsList className="bg-white border">
+            <TabsTrigger value="status">Completion Status</TabsTrigger>
+            <TabsTrigger value="history">Completion History</TabsTrigger>
+            <TabsTrigger value="team">Team Members</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="status">
+            <Card className="border-0 shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-lg">Week {selectedWeek} Completion Status</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {activeMembers.length === 0 ? (
+                  <div className="text-center py-12 text-slate-500">
+                    <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No team members added yet.</p>
+                    <Button 
+                      variant="outline" 
+                      className="mt-4"
+                      onClick={() => setAddDialogOpen(true)}
+                    >
+                      Add First Team Member
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {activeMembers.map((member) => (
+                      <TeamMemberCard
+                        key={member.id}
+                        member={member}
+                        completion={getMemberCompletion(member.id)}
+                        onMarkComplete={(m) => markCompleteMutation.mutate(m)}
+                        onDelete={(m) => deleteMemberMutation.mutate(m.id)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="history">
+            <Card className="border-0 shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-lg">Week {selectedWeek} Completions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {weekCompletions.length === 0 ? (
+                  <div className="text-center py-12 text-slate-500">
+                    <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No completions recorded for this week yet.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {weekCompletions.map((completion) => (
+                      <div 
+                        key={completion.id}
+                        className="p-4 bg-slate-50 rounded-xl border border-slate-100"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <p className="font-medium text-slate-800">{completion.team_member_name}</p>
+                            <p className="text-sm text-slate-500">
+                              {format(new Date(completion.completion_date), 'MMM d, yyyy h:mm a')}
+                            </p>
+                          </div>
+                          {completion.marked_by_admin && (
+                            <Badge variant="outline" className="text-xs">
+                              Marked by Admin
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-slate-600 mt-2 italic">
+                          "{completion.description}"
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="team">
+            <Card className="border-0 shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-lg">All Team Members</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {teamMembers.length === 0 ? (
+                  <div className="text-center py-12 text-slate-500">
+                    <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No team members added yet.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {teamMembers.map((member) => (
+                      <div 
+                        key={member.id}
+                        className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200"
+                      >
+                        <div>
+                          <p className="font-medium text-slate-800">{member.name}</p>
+                          <p className="text-sm text-slate-500">{member.email}</p>
+                          {member.phone && (
+                            <p className="text-sm text-slate-400">{member.phone}</p>
+                          )}
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                          onClick={() => deleteMemberMutation.mutate(member.id)}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      <AddTeamMemberDialog
+        open={addDialogOpen}
+        onOpenChange={setAddDialogOpen}
+        onAdd={(data) => addMemberMutation.mutateAsync(data)}
+      />
+    </div>
+  );
+}
