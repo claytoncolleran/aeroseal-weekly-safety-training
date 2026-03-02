@@ -285,6 +285,7 @@ export default function AdminDashboard() {
                         completion={getMemberCompletion(member.id)}
                         onMarkComplete={(m) => markCompleteMutation.mutate(m)}
                         onDelete={(m) => deleteMemberMutation.mutate(m.id)}
+                        onEdit={handleEditMember}
                       />
                     ))}
                   </div>
