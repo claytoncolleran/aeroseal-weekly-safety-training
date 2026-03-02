@@ -240,6 +240,7 @@ export default function AdminDashboard() {
             <TabsTrigger value="status">Completion Status</TabsTrigger>
             <TabsTrigger value="history">Completion History</TabsTrigger>
             <TabsTrigger value="team">Team Members</TabsTrigger>
+            <TabsTrigger value="schedule">Video Schedule</TabsTrigger>
           </TabsList>
 
           <TabsContent value="status">
