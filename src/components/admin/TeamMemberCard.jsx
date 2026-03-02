@@ -71,6 +71,10 @@ export default function TeamMemberCard({
                   Mark as Complete
                 </DropdownMenuItem>
               )}
+              <DropdownMenuItem onClick={() => onEdit(member)}>
+                <Pencil className="w-4 h-4 mr-2" />
+                Edit Member
+              </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={() => onDelete(member)}
                 className="text-red-600"
