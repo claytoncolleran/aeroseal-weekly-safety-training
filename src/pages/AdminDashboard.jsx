@@ -18,6 +18,8 @@ import VideoScheduleTab from '@/components/schedule/VideoScheduleTab';
 
 export default function AdminDashboard() {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingMember, setEditingMember] = useState(null);
   const [selectedWeek, setSelectedWeek] = useState(null);
   const queryClient = useQueryClient();
 
