@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, XCircle, Clock, MoreVertical, Trash2, CheckSquare } from 'lucide-react';
+import { CheckCircle2, Clock, MoreVertical, Trash2, CheckSquare, Pencil } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +13,7 @@ export default function TeamMemberCard({
   completion, 
   onMarkComplete, 
   onDelete,
+  onEdit,
   showActions = true 
 }) {
   const isComplete = !!completion;
