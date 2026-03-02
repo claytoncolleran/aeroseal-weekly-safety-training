@@ -83,6 +83,25 @@ export default function AdminDashboard() {
     return teamMembers.filter(m => m.is_active !== false);
   }, [teamMembers]);
 
+  const filteredAndSortedMembers = useMemo(() => {
+    let members = divisionFilter === 'all'
+      ? activeMembers
+      : activeMembers.filter(m => m.division === divisionFilter);
+
+    return [...members].sort((a, b) => {
+      if (sortOrder === 'alpha') {
+        return a.name.localeCompare(b.name);
+      }
+      // most recently completed first, then pending at bottom
+      const compA = weekCompletions.find(c => c.team_member_id === a.id);
+      const compB = weekCompletions.find(c => c.team_member_id === b.id);
+      if (compA && compB) return new Date(compB.completion_date) - new Date(compA.completion_date);
+      if (compA) return -1;
+      if (compB) return 1;
+      return a.name.localeCompare(b.name);
+    });
+  }, [activeMembers, divisionFilter, sortOrder, weekCompletions]);
+
   // Completion stats
   const stats = useMemo(() => {
     const completed = weekCompletions.length;
