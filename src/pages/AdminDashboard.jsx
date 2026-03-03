@@ -17,6 +17,7 @@ import EditTeamMemberDialog from '@/components/admin/EditTeamMemberDialog';
 import WeekSelector from '@/components/admin/WeekSelector';
 import VideoScheduleTab from '@/components/schedule/VideoScheduleTab';
 import ExportCsvButton from '@/components/admin/ExportCsvButton';
+import DownloadTrainingRecordDialog from '@/components/admin/DownloadTrainingRecordDialog';
 
 export default function AdminDashboard() {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
