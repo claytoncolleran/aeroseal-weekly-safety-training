@@ -26,6 +26,7 @@ export default function CompletionForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setError('');
     
     if (description.length < 50) {
       setError('Please provide a description of at least 50 characters.');
