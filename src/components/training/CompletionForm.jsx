@@ -23,7 +23,7 @@ export default function CompletionForm({
   const [signatureData, setSignatureData] = useState(null);
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
