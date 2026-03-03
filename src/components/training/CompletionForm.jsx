@@ -99,6 +99,8 @@ export default function CompletionForm({
             </p>
           </div>
 
+          <SignaturePad onSignatureChange={setSignatureData} />
+
           <div className="flex items-start gap-3 p-4 bg-amber-50 rounded-lg border border-amber-100">
             <Checkbox
               id="acknowledge"
