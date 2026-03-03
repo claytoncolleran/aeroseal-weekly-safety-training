@@ -110,6 +110,34 @@ export default function AdminDashboard() {
     });
   }, [activeMembers, divisionFilter, sortOrder, weekCompletions]);
 
+  // Filtered/sorted completions for History tab
+  const filteredAndSortedHistory = useMemo(() => {
+    // Enrich completions with member division for filtering
+    const enriched = weekCompletions.map(c => {
+      const member = teamMembers.find(m => m.id === c.team_member_id);
+      return { ...c, division: member?.division || '' };
+    });
+    let filtered = historyDivisionFilter === 'all'
+      ? enriched
+      : enriched.filter(c => c.division === historyDivisionFilter);
+
+    return [...filtered].sort((a, b) => {
+      if (historySortOrder === 'alpha') return a.team_member_name.localeCompare(b.team_member_name);
+      return new Date(b.completion_date) - new Date(a.completion_date);
+    });
+  }, [weekCompletions, teamMembers, historyDivisionFilter, historySortOrder]);
+
+  // Filtered/sorted members for Team Members tab
+  const filteredAndSortedTeamMembers = useMemo(() => {
+    let members = teamDivisionFilter === 'all'
+      ? teamMembers
+      : teamMembers.filter(m => m.division === teamDivisionFilter);
+    return [...members].sort((a, b) => {
+      if (teamSortOrder === 'alpha') return a.name.localeCompare(b.name);
+      return b.name.localeCompare(a.name); // reverse alpha
+    });
+  }, [teamMembers, teamDivisionFilter, teamSortOrder]);
+
   // Completion stats
   const stats = useMemo(() => {
     const completed = weekCompletions.length;
