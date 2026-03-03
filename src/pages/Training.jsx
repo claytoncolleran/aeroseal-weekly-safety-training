@@ -82,6 +82,7 @@ export default function Training() {
         acknowledged: data.acknowledged,
         completion_date: new Date().toISOString(),
         marked_by_admin: false,
+        signature_url: data.signature_url || '',
       });
     },
     onSuccess: () => {
