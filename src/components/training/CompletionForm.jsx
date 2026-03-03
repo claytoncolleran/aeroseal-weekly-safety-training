@@ -37,7 +37,17 @@ export default function CompletionForm({
       return;
     }
 
-    onSubmit({ description, acknowledged });
+    if (!signatureData) {
+      setError('Please provide your signature.');
+      return;
+    }
+
+    // Upload signature image and get URL
+    const blob = await fetch(signatureData).then(r => r.blob());
+    const file = new File([blob], 'signature.png', { type: 'image/png' });
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+
+    onSubmit({ description, acknowledged, signature_url: file_url });
   };
 
   if (alreadyCompleted) {
