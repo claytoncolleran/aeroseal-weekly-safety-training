@@ -488,7 +488,51 @@ export default function AdminDashboard() {
           <TabsContent value="team">
             <Card className="border-0 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-lg">All Team Members</CardTitle>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <CardTitle className="text-lg">All Team Members</CardTitle>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Filter className="w-4 h-4 text-slate-400 shrink-0" />
+                    <Select value={teamDivisionFilter} onValueChange={setTeamDivisionFilter}>
+                      <SelectTrigger className="w-36 h-8 text-sm">
+                        <SelectValue placeholder="Division" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Divisions</SelectItem>
+                        <SelectItem value="East">East</SelectItem>
+                        <SelectItem value="Midwest">Midwest</SelectItem>
+                        <SelectItem value="Southwest">Southwest</SelectItem>
+                        <SelectItem value="Mountain">Mountain</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <ArrowUpDown className="w-4 h-4 text-slate-400 shrink-0" />
+                    <Select value={teamSortOrder} onValueChange={setTeamSortOrder}>
+                      <SelectTrigger className="w-44 h-8 text-sm">
+                        <SelectValue placeholder="Sort" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="alpha">A → Z</SelectItem>
+                        <SelectItem value="alpha_desc">Z → A</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <ExportCsvButton
+                      currentViewData={filteredAndSortedTeamMembers.map(m => ({
+                        Name: m.name,
+                        Email: m.email,
+                        Phone: m.phone || '',
+                        Division: m.division || '',
+                        Active: m.is_active !== false ? 'Yes' : 'No',
+                      }))}
+                      allData={teamMembers.map(m => ({
+                        Name: m.name,
+                        Email: m.email,
+                        Phone: m.phone || '',
+                        Division: m.division || '',
+                        Active: m.is_active !== false ? 'Yes' : 'No',
+                      }))}
+                      filenamePrefix="team_members"
+                    />
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
                 {teamMembers.length === 0 ? (
@@ -496,9 +540,14 @@ export default function AdminDashboard() {
                     <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p>No team members added yet.</p>
                   </div>
+                ) : filteredAndSortedTeamMembers.length === 0 ? (
+                  <div className="text-center py-12 text-slate-500">
+                    <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No members in this division.</p>
+                  </div>
                 ) : (
                   <div className="space-y-3">
-                    {teamMembers.map((member) => (
+                    {filteredAndSortedTeamMembers.map((member) => (
                       <div 
                         key={member.id}
                         className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200"
