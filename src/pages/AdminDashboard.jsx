@@ -21,6 +21,7 @@ import DownloadTrainingRecordDialog from '@/components/admin/DownloadTrainingRec
 
 export default function AdminDashboard() {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
   const [selectedWeek, setSelectedWeek] = useState(null);
