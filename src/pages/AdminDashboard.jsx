@@ -345,6 +345,31 @@ export default function AdminDashboard() {
                         <SelectItem value="recent">Most Recently Completed</SelectItem>
                       </SelectContent>
                     </Select>
+                    <ExportCsvButton
+                      currentViewData={filteredAndSortedMembers.map(m => {
+                        const comp = getMemberCompletion(m.id);
+                        return {
+                          Name: m.name,
+                          Email: m.email,
+                          Division: m.division || '',
+                          Status: comp ? 'Completed' : 'Pending',
+                          'Completion Date': comp?.completion_date ? format(new Date(comp.completion_date), 'MMM d, yyyy h:mm a') : '',
+                          'Marked by Admin': comp?.marked_by_admin ? 'Yes' : 'No',
+                        };
+                      })}
+                      allData={activeMembers.map(m => {
+                        const comp = getMemberCompletion(m.id);
+                        return {
+                          Name: m.name,
+                          Email: m.email,
+                          Division: m.division || '',
+                          Status: comp ? 'Completed' : 'Pending',
+                          'Completion Date': comp?.completion_date ? format(new Date(comp.completion_date), 'MMM d, yyyy h:mm a') : '',
+                          'Marked by Admin': comp?.marked_by_admin ? 'Yes' : 'No',
+                        };
+                      })}
+                      filenamePrefix={`week${selectedWeek}_status`}
+                    />
                   </div>
                 </div>
               </CardHeader>
