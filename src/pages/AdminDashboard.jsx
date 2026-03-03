@@ -387,7 +387,58 @@ export default function AdminDashboard() {
           <TabsContent value="history">
             <Card className="border-0 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-lg">Week {selectedWeek} Completions</CardTitle>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <CardTitle className="text-lg">Week {selectedWeek} Completions</CardTitle>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Filter className="w-4 h-4 text-slate-400 shrink-0" />
+                    <Select value={historyDivisionFilter} onValueChange={setHistoryDivisionFilter}>
+                      <SelectTrigger className="w-36 h-8 text-sm">
+                        <SelectValue placeholder="Division" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Divisions</SelectItem>
+                        <SelectItem value="East">East</SelectItem>
+                        <SelectItem value="Midwest">Midwest</SelectItem>
+                        <SelectItem value="Southwest">Southwest</SelectItem>
+                        <SelectItem value="Mountain">Mountain</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <ArrowUpDown className="w-4 h-4 text-slate-400 shrink-0" />
+                    <Select value={historySortOrder} onValueChange={setHistorySortOrder}>
+                      <SelectTrigger className="w-44 h-8 text-sm">
+                        <SelectValue placeholder="Sort" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="recent">Most Recently Completed</SelectItem>
+                        <SelectItem value="alpha">Alphabetical</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <ExportCsvButton
+                      currentViewData={filteredAndSortedHistory.map(c => ({
+                        Name: c.team_member_name,
+                        Division: c.division,
+                        'Week Number': c.week_number,
+                        'Video Title': c.video_title,
+                        Description: c.description,
+                        'Completion Date': c.completion_date ? format(new Date(c.completion_date), 'MMM d, yyyy h:mm a') : '',
+                        'Marked by Admin': c.marked_by_admin ? 'Yes' : 'No',
+                      }))}
+                      allData={completions.map(c => {
+                        const member = teamMembers.find(m => m.id === c.team_member_id);
+                        return {
+                          Name: c.team_member_name,
+                          Division: member?.division || '',
+                          'Week Number': c.week_number,
+                          'Video Title': c.video_title,
+                          Description: c.description,
+                          'Completion Date': c.completion_date ? format(new Date(c.completion_date), 'MMM d, yyyy h:mm a') : '',
+                          'Marked by Admin': c.marked_by_admin ? 'Yes' : 'No',
+                        };
+                      })}
+                      filenamePrefix={`week${selectedWeek}_completions`}
+                    />
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
                 {weekCompletions.length === 0 ? (
@@ -395,9 +446,14 @@ export default function AdminDashboard() {
                     <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p>No completions recorded for this week yet.</p>
                   </div>
+                ) : filteredAndSortedHistory.length === 0 ? (
+                  <div className="text-center py-12 text-slate-500">
+                    <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No completions for this division.</p>
+                  </div>
                 ) : (
                   <div className="space-y-4">
-                    {weekCompletions.map((completion) => (
+                    {filteredAndSortedHistory.map((completion) => (
                       <div 
                         key={completion.id}
                         className="p-4 bg-slate-50 rounded-xl border border-slate-100"
@@ -405,6 +461,9 @@ export default function AdminDashboard() {
                         <div className="flex items-start justify-between mb-2">
                           <div>
                             <p className="font-medium text-slate-800">{completion.team_member_name}</p>
+                            {completion.division && (
+                              <p className="text-xs text-slate-400">{completion.division}</p>
+                            )}
                             <p className="text-sm text-slate-500">
                               {format(new Date(completion.completion_date), 'MMM d, yyyy h:mm a')}
                             </p>
