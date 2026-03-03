@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { base44 } from '@/api/base44Client';
+import SignaturePad from './SignaturePad';
 
 export default function CompletionForm({ 
   videoTitle, 

@@ -67,6 +67,7 @@ export default function DownloadTrainingRecordDialog({ open, onOpenChange, compl
         Description: c.description || '',
         'Completion Date': c.completion_date ? format(new Date(c.completion_date), 'MMM d, yyyy h:mm a') : '',
         'Marked by Admin': c.marked_by_admin ? 'Yes' : 'No',
+        'Signature': c.signature_url || '',
       };
     });
 
