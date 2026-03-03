@@ -134,7 +134,7 @@ export default function AdminDashboard() {
       : teamMembers.filter(m => m.division === teamDivisionFilter);
     return [...members].sort((a, b) => {
       if (teamSortOrder === 'alpha') return a.name.localeCompare(b.name);
-      return b.name.localeCompare(a.name); // reverse alpha
+      return b.name.localeCompare(a.name);
     });
   }, [teamMembers, teamDivisionFilter, teamSortOrder]);
 
