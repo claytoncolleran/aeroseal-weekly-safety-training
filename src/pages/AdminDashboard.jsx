@@ -216,13 +216,22 @@ export default function AdminDashboard() {
             <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
             <p className="text-slate-500 mt-1">Manage team training and track completions</p>
           </div>
-          <Button 
-            onClick={() => setAddDialogOpen(true)}
-            className="bg-emerald-600 hover:bg-emerald-700"
-          >
-            <UserPlus className="w-4 h-4 mr-2" />
-            Add Team Member
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setDownloadDialogOpen(true)}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Download Training Records
+            </Button>
+            <Button 
+              onClick={() => setAddDialogOpen(true)}
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              <UserPlus className="w-4 h-4 mr-2" />
+              Add Team Member
+            </Button>
+          </div>
         </div>
 
         {/* Week Selector & Current Training */}
