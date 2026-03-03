@@ -26,7 +26,6 @@ export default function CompletionForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setError('');
     
     if (description.length < 50) {
       setError('Please provide a description of at least 50 characters.');
@@ -43,7 +42,6 @@ export default function CompletionForm({
       return;
     }
 
-    // Upload signature image and get URL
     const blob = await fetch(signatureData).then(r => r.blob());
     const file = new File([blob], 'signature.png', { type: 'image/png' });
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
