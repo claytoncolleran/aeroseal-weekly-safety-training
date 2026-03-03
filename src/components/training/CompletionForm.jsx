@@ -20,6 +20,7 @@ export default function CompletionForm({
 }) {
   const [description, setDescription] = useState('');
   const [acknowledged, setAcknowledged] = useState(false);
+  const [signatureData, setSignatureData] = useState(null);
   const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
