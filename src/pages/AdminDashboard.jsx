@@ -634,6 +634,12 @@ export default function AdminDashboard() {
         onOpenChange={setAddDialogOpen}
         onAdd={(data) => addMemberMutation.mutateAsync(data)}
       />
+      <DownloadTrainingRecordDialog
+        open={downloadDialogOpen}
+        onOpenChange={setDownloadDialogOpen}
+        completions={completions}
+        teamMembers={teamMembers}
+      />
       <EditTeamMemberDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
