@@ -23,8 +23,15 @@ export default function AdminDashboard() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
   const [selectedWeek, setSelectedWeek] = useState(null);
+  // Completion Status tab filters
   const [divisionFilter, setDivisionFilter] = useState('all');
   const [sortOrder, setSortOrder] = useState('alpha');
+  // Completion History tab filters
+  const [historyDivisionFilter, setHistoryDivisionFilter] = useState('all');
+  const [historySortOrder, setHistorySortOrder] = useState('recent');
+  // Team Members tab filters
+  const [teamDivisionFilter, setTeamDivisionFilter] = useState('all');
+  const [teamSortOrder, setTeamSortOrder] = useState('alpha');
   const queryClient = useQueryClient();
 
   const { data: schedules = [], isLoading: schedulesLoading } = useQuery({
