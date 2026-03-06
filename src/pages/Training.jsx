@@ -191,6 +191,8 @@ export default function Training() {
 
         {/* Legal Links */}
         <div className="mt-8 pt-6 border-t border-slate-200 text-center text-xs text-slate-400 space-x-4">
+          <a href="/About" className="hover:text-emerald-600 transition-colors">About</a>
+          <span>·</span>
           <a href="/PrivacyPolicy" className="hover:text-emerald-600 transition-colors">Privacy Policy</a>
           <span>·</span>
           <a href="/TermsOfService" className="hover:text-emerald-600 transition-colors">Terms of Service</a>
