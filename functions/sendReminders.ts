@@ -54,7 +54,11 @@ Deno.serve(async (req) => {
     // Get Gmail access token
     const accessToken = await base44.asServiceRole.connectors.getAccessToken('gmail');
 
-    let sentCount = 0;
+    const telnyxApiKey = Deno.env.get('TELNYX_API_KEY');
+    const telnyxFromNumber = Deno.env.get('TELNYX_FROM_NUMBER');
+
+    let emailSentCount = 0;
+    let smsSentCount = 0;
 
     for (const member of pendingMembers) {
       const subject = reminderType === 'new'
@@ -84,7 +88,7 @@ Thank you for prioritizing safety!
 
 Safety Training Team`.trim();
 
-      // Encode email in RFC 2822 format for Gmail API
+      // Send email via Gmail
       const emailLines = [
         `To: ${member.email}`,
         `Subject: ${subject}`,
@@ -109,16 +113,50 @@ Safety Training Team`.trim();
           const err = await res.text();
           console.error(`Failed to send email to ${member.email}:`, err);
         } else {
-          sentCount++;
+          emailSentCount++;
         }
       } catch (emailError) {
         console.error(`Failed to send email to ${member.email}:`, emailError);
+      }
+
+      // Send SMS via Telnyx if member has a phone number
+      if (member.phone && telnyxApiKey && telnyxFromNumber) {
+        const smsText = reminderType === 'new'
+          ? `Hi ${member.name}, new safety training is available for Week ${currentTraining.week_number}: "${currentTraining.video_title}". Complete it here: ${appUrl}/Training`
+          : reminderType === 'final'
+          ? `⚠️ Final reminder, ${member.name}: Please complete your safety training today. "${currentTraining.video_title}" - ${appUrl}/Training`
+          : `Reminder, ${member.name}: Please complete this week's safety training. "${currentTraining.video_title}" - ${appUrl}/Training`;
+
+        try {
+          const smsRes = await fetch('https://api.telnyx.com/v2/messages', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${telnyxApiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              from: telnyxFromNumber,
+              to: member.phone,
+              text: smsText,
+            }),
+          });
+
+          if (!smsRes.ok) {
+            const err = await smsRes.text();
+            console.error(`Failed to send SMS to ${member.phone}:`, err);
+          } else {
+            smsSentCount++;
+          }
+        } catch (smsError) {
+          console.error(`Failed to send SMS to ${member.phone}:`, smsError);
+        }
       }
     }
 
     return Response.json({
       message: 'Reminders sent successfully',
-      sent: sentCount,
+      emailSent: emailSentCount,
+      smsSent: smsSentCount,
       pending: pendingMembers.length,
       currentWeek: currentTraining.week_number,
       reminderType: reminderType,
