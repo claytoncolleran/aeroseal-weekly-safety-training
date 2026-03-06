@@ -16,7 +16,8 @@ export default function PrivacyPolicy() {
         <section className="mb-6">
           <h2 className="text-lg font-semibold text-slate-800 mb-2">1. Overview</h2>
           <p className="text-slate-600 text-sm leading-relaxed">
-            Aeroseal ("Company," "we," "us," or "our") operates the Safety Training Accountability platform. 
+            Neora, LLC ("Company," "we," "us," or "our") is a digital and business services provider based in 
+            Bluffton, SC, operating the Safety Training Accountability platform on behalf of Aeroseal. 
             This Privacy Policy describes how we collect, use, and protect information in connection with our 
             email and SMS text message reminder services used to notify team members about safety training requirements.
           </p>

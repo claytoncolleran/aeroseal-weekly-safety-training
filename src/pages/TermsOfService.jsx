@@ -16,18 +16,18 @@ export default function TermsOfService() {
         <section className="mb-6">
           <h2 className="text-lg font-semibold text-slate-800 mb-2">1. Acceptance of Terms</h2>
           <p className="text-slate-600 text-sm leading-relaxed">
-            By accessing and using the Aeroseal Safety Training Accountability platform ("Service"), 
-            you agree to be bound by these Terms of Service. If you do not agree to these terms, 
-            please contact your administrator to be removed from the notification list.
+            By accessing and using the Safety Training Accountability platform ("Service"), operated by 
+            Neora, LLC on behalf of Aeroseal, you agree to be bound by these Terms of Service. 
+            If you do not agree to these terms, please contact your administrator to be removed from the notification list.
           </p>
         </section>
 
         <section className="mb-6">
           <h2 className="text-lg font-semibold text-slate-800 mb-2">2. Purpose of the Service</h2>
           <p className="text-slate-600 text-sm leading-relaxed">
-            This Service is provided exclusively for the purpose of managing and tracking mandatory 
-            workplace safety training for Aeroseal employees and contractors. Use of this platform 
-            is limited to authorized users within the organization.
+            This Service is provided by Neora, LLC, a digital and business services company based in Bluffton, SC, 
+            exclusively for the purpose of managing and tracking mandatory workplace safety training for 
+            Aeroseal employees and contractors. Use of this platform is limited to authorized users within the organization.
           </p>
         </section>
 
