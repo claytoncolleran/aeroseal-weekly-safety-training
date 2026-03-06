@@ -119,8 +119,9 @@ Safety Training Team`.trim();
         console.error(`Failed to send email to ${member.email}:`, emailError);
       }
 
+      // SMS PAUSED - awaiting 10DLC compliance approval
       // Send SMS via Telnyx if member has a phone number
-      if (member.phone && telnyxApiKey && telnyxFromNumber) {
+      if (false && member.phone && telnyxApiKey && telnyxFromNumber) {
         const smsText = reminderType === 'new'
           ? `Hi ${member.name}, new safety training is available for Week ${currentTraining.week_number}: "${currentTraining.video_title}". Complete it here: ${appUrl}/Training`
           : reminderType === 'final'
