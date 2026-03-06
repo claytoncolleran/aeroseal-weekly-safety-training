@@ -82,7 +82,7 @@ export default function TermsOfService() {
         <section className="mb-6">
           <h2 className="text-lg font-semibold text-slate-800 mb-2">7. Changes to These Terms</h2>
           <p className="text-slate-600 text-sm leading-relaxed">
-            Aeroseal reserves the right to update these Terms of Service at any time. Continued use 
+            Neora, LLC reserves the right to update these Terms of Service at any time. Continued use 
             of the Service following any updates constitutes your acceptance of the revised terms.
           </p>
         </section>
@@ -90,7 +90,8 @@ export default function TermsOfService() {
         <section className="mb-6">
           <h2 className="text-lg font-semibold text-slate-800 mb-2">8. Contact</h2>
           <p className="text-slate-600 text-sm leading-relaxed">
-            For questions regarding these Terms of Service, please contact your Aeroseal administrator.
+            For questions regarding these Terms of Service, please contact Neora, LLC at{' '}
+            <a href="mailto:neorallc@gmail.com" className="text-emerald-600 hover:underline">neorallc@gmail.com</a> or your Aeroseal administrator.
           </p>
         </section>
       </div>

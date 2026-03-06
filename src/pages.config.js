@@ -51,6 +51,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import Training from './pages/Training';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import About from './pages/About';
 import __Layout from './Layout.jsx';
 
 
@@ -59,6 +60,7 @@ export const PAGES = {
     "Training": Training,
     "PrivacyPolicy": PrivacyPolicy,
     "TermsOfService": TermsOfService,
+    "About": About,
 }
 
 export const pagesConfig = {

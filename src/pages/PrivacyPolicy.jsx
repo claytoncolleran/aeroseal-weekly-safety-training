@@ -85,7 +85,7 @@ export default function PrivacyPolicy() {
           <h2 className="text-lg font-semibold text-slate-800 mb-2">7. Contact Us</h2>
           <p className="text-slate-600 text-sm leading-relaxed">
             If you have questions about this Privacy Policy or how your information is used, 
-            please contact your Aeroseal administrator.
+            please contact Neora, LLC at <a href="mailto:neorallc@gmail.com" className="text-emerald-600 hover:underline">neorallc@gmail.com</a> or your Aeroseal administrator.
           </p>
         </section>
       </div>
