@@ -17,6 +17,7 @@ import AddTeamMemberDialog from '@/components/admin/AddTeamMemberDialog';
 import EditTeamMemberDialog from '@/components/admin/EditTeamMemberDialog';
 import WeekSelector from '@/components/admin/WeekSelector';
 import VideoScheduleTab from '@/components/schedule/VideoScheduleTab';
+import DivisionReportsTab from '@/components/admin/DivisionReportsTab';
 import ExportCsvButton from '@/components/admin/ExportCsvButton';
 import DownloadTrainingRecordDialog from '@/components/admin/DownloadTrainingRecordDialog';
 import ReportScheduleCard from '@/components/admin/ReportScheduleCard';
