@@ -4,13 +4,23 @@ import { jsPDF } from 'npm:jspdf@4.0.0';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
 
-    if (user?.role !== 'admin') {
+    // Allow scheduled calls (no user) or admin users
+    const user = await base44.auth.me().catch(() => null);
+    if (user !== null && user?.role !== 'admin') {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    const { generated_by, send_email } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const { generated_by = 'Scheduled', send_email = true } = body;
+
+    // For scheduled runs, check if the feature is enabled
+    if (generated_by === 'Scheduled') {
+      const settingsList = await base44.asServiceRole.entities.ReportScheduleSettings.list();
+      if (settingsList.length > 0 && settingsList[0].is_enabled === false) {
+        return Response.json({ skipped: true, reason: 'Scheduled reports are disabled.' });
+      }
+    }
 
     // Fetch all needed data
     const [schedules, allTeamMembers, completions] = await Promise.all([
