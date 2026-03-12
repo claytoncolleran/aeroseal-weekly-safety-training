@@ -366,6 +366,9 @@ export default function AdminDashboard() {
         {/* Report Schedule Settings (admin only) */}
         <ReportScheduleCard />
 
+        {/* Reminder Schedule Settings (admin only) */}
+        <ReminderScheduleCard />
+
         {/* Team Status */}
         <Tabs defaultValue="status" className="space-y-6">
           <TabsList className="bg-white border">
