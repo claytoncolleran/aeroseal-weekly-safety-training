@@ -663,6 +663,9 @@ export default function AdminDashboard() {
           <TabsContent value="schedule">
             <VideoScheduleTab />
           </TabsContent>
+          <TabsContent value="reports">
+            <DivisionReportsTab />
+          </TabsContent>
         </Tabs>
       </div>
 
