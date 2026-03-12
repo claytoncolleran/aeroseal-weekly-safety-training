@@ -78,66 +78,66 @@ export default function ReportScheduleCard() {
         </div>
       </CardHeader>
       {!collapsed && (
-      <CardContent>
-        <div className="flex flex-col sm:flex-row sm:items-end gap-5">
-          {/* Enable toggle */}
-          <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-slate-600">Weekly Report Schedule</Label>
-            <div className="flex items-center gap-2 h-9">
-              <Switch
-                checked={settings.is_enabled}
-                onCheckedChange={(val) => setSettings(s => ({ ...s, is_enabled: val }))}
-              />
-              <span className={`text-sm font-medium ${settings.is_enabled ? 'text-emerald-600' : 'text-slate-400'}`}>
-                {settings.is_enabled ? 'Enabled' : 'Disabled'}
-              </span>
+        <CardContent>
+          <div className="flex flex-col sm:flex-row sm:items-end gap-5">
+            {/* Enable toggle */}
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-slate-600">Weekly Report Schedule</Label>
+              <div className="flex items-center gap-2 h-9">
+                <Switch
+                  checked={settings.is_enabled}
+                  onCheckedChange={(val) => setSettings(s => ({ ...s, is_enabled: val }))}
+                />
+                <span className={`text-sm font-medium ${settings.is_enabled ? 'text-emerald-600' : 'text-slate-400'}`}>
+                  {settings.is_enabled ? 'Enabled' : 'Disabled'}
+                </span>
+              </div>
             </div>
-          </div>
 
-          {/* Day of week */}
-          <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-slate-600">Day of Week</Label>
-            <Select
-              value={String(settings.day_of_week)}
-              onValueChange={(val) => setSettings(s => ({ ...s, day_of_week: Number(val) }))}
+            {/* Day of week */}
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-slate-600">Day of Week</Label>
+              <Select
+                value={String(settings.day_of_week)}
+                onValueChange={(val) => setSettings(s => ({ ...s, day_of_week: Number(val) }))}
+              >
+                <SelectTrigger className="w-36">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {DAYS.map(d => (
+                    <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Send time */}
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-slate-600">Send Time (ET)</Label>
+              <input
+                type="time"
+                value={settings.send_time}
+                onChange={(e) => setSettings(s => ({ ...s, send_time: e.target.value }))}
+                className="h-9 w-32 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
+              />
+            </div>
+
+            <Button
+              onClick={handleSave}
+              disabled={saving}
+              className="bg-emerald-600 hover:bg-emerald-700 sm:self-end"
             >
-              <SelectTrigger className="w-36">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {DAYS.map(d => (
-                  <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Save Schedule
+            </Button>
           </div>
 
-          {/* Send time */}
-          <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-slate-600">Send Time (ET)</Label>
-            <input
-              type="time"
-              value={settings.send_time}
-              onChange={(e) => setSettings(s => ({ ...s, send_time: e.target.value }))}
-              className="h-9 w-32 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
-            />
-          </div>
-
-          <Button
-            onClick={handleSave}
-            disabled={saving}
-            className="bg-emerald-600 hover:bg-emerald-700 sm:self-end"
-          >
-            {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            Save Schedule
-          </Button>
-        </div>
-
-        <p className="text-xs text-slate-400 mt-4">
-          Reports are emailed to team members with "Receive Division Report" enabled.
-          Disabling the toggle will prevent the scheduled report from running. Day and time changes are saved as preferences.
-        </p>
-      </CardContent>
+          <p className="text-xs text-slate-400 mt-4">
+            Reports are emailed to team members with "Receive Division Report" enabled.
+            Disabling the toggle will prevent the scheduled report from running. Day and time changes are saved as preferences.
+          </p>
+        </CardContent>
       )}
     </Card>
   );
