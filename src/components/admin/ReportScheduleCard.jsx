@@ -58,12 +58,26 @@ export default function ReportScheduleCard() {
 
   return (
     <Card className="border-0 shadow-sm mb-6">
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <CalendarClock className="w-5 h-5 text-emerald-600" />
-          <CardTitle className="text-base">Report Schedule Settings</CardTitle>
+      <CardHeader
+        className="pb-3 cursor-pointer select-none"
+        onClick={() => setCollapsed(c => !c)}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <CalendarClock className="w-5 h-5 text-emerald-600" />
+            <CardTitle className="text-base">Report Schedule Settings</CardTitle>
+            {!settings.is_enabled && (
+              <span className="text-xs text-slate-400 font-normal">(Disabled)</span>
+            )}
+          </div>
+          {collapsed ? (
+            <ChevronDown className="w-4 h-4 text-slate-400" />
+          ) : (
+            <ChevronUp className="w-4 h-4 text-slate-400" />
+          )}
         </div>
       </CardHeader>
+      {!collapsed && (
       <CardContent>
         <div className="flex flex-col sm:flex-row sm:items-end gap-5">
           {/* Enable toggle */}
