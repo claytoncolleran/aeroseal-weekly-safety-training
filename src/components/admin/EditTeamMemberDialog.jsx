@@ -18,6 +18,7 @@ export default function EditTeamMemberDialog({ open, onOpenChange, member, onSav
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [division, setDivision] = useState('');
+  const [receiveDivisionReport, setReceiveDivisionReport] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
