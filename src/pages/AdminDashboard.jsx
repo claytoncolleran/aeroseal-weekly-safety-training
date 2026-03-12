@@ -350,6 +350,9 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
+        {/* Report Schedule Settings (admin only) */}
+        <ReportScheduleCard />
+
         {/* Team Status */}
         <Tabs defaultValue="status" className="space-y-6">
           <TabsList className="bg-white border">
