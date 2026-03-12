@@ -138,6 +138,7 @@ export default function ReportScheduleCard() {
           Disabling the toggle will prevent the scheduled report from running. Day and time changes are saved as preferences.
         </p>
       </CardContent>
+      )}
     </Card>
   );
 }
