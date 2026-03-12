@@ -199,13 +199,22 @@ export default function AdminDashboard() {
     },
   });
 
-  const handleGenerateReports = async () => {
+  const handleGenerateReports = async (selectedDivisions) => {
+    const names = selectedDivisions.join(', ');
+    toast.loading(`Generating reports for ${names}...`, { id: 'gen-reports' });
     setGeneratingReports(true);
     try {
-      await base44.functions.invoke('generateDivisionReports', { generated_by: 'Manual', send_email: false });
-      toast.success('Reports generated successfully. 4 division reports have been saved to the Reports Archive.');
+      await base44.functions.invoke('generateDivisionReports', {
+        generated_by: 'Manual',
+        send_email: false,
+        divisions: selectedDivisions,
+      });
+      toast.success(
+        `Reports generated successfully. ${selectedDivisions.length} division report(s) saved to the Reports Archive.`,
+        { id: 'gen-reports' }
+      );
     } catch (err) {
-      toast.error(err?.message || 'Failed to generate reports. Please try again.');
+      toast.error(err?.message || 'Failed to generate reports. Please try again.', { id: 'gen-reports' });
     } finally {
       setGeneratingReports(false);
     }
