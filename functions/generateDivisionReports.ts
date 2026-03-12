@@ -62,7 +62,8 @@ Deno.serve(async (req) => {
       dateStyle: 'long',
       timeStyle: 'short',
     });
-    const generatedDateShort = new Date().toLocaleDateString('en-US');
+    const generatedDateShort = new Date().toLocaleDateString('en-US', { timeZone: 'America/New_York', month: '2-digit', day: '2-digit', year: 'numeric' });
+    const weekOfFormatted = (() => { const [y, m, d] = weekOf.split('-'); return `${m}/${d}/${y}`; })();
 
     // Get Gmail access token if emailing
     let accessToken = null;
