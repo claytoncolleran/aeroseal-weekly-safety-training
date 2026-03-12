@@ -361,6 +361,7 @@ export default function AdminDashboard() {
             <TabsTrigger value="history">Completion History</TabsTrigger>
             <TabsTrigger value="team">Team Members</TabsTrigger>
             <TabsTrigger value="schedule">Video Schedule</TabsTrigger>
+            <TabsTrigger value="reports">Division Reports</TabsTrigger>
           </TabsList>
 
           <TabsContent value="status">
