@@ -1,8 +1,14 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+
+    // Check if reminders are enabled
+    const reminderSettings = await base44.asServiceRole.entities.ReminderScheduleSettings.list();
+    if (reminderSettings.length > 0 && reminderSettings[0].is_enabled === false) {
+      return Response.json({ skipped: true, reason: 'Reminder emails are disabled.' });
+    }
 
     // Get all data
     const schedules = await base44.asServiceRole.entities.TrainingSchedule.list();
