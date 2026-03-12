@@ -21,6 +21,7 @@ import DivisionReportsTab from '@/components/admin/DivisionReportsTab';
 import ExportCsvButton from '@/components/admin/ExportCsvButton';
 import DownloadTrainingRecordDialog from '@/components/admin/DownloadTrainingRecordDialog';
 import ReportScheduleCard from '@/components/admin/ReportScheduleCard';
+import ReminderScheduleCard from '@/components/admin/ReminderScheduleCard';
 import GenerateReportsModal from '@/components/admin/GenerateReportsModal';
 
 export default function AdminDashboard() {
