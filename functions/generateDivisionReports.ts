@@ -238,7 +238,7 @@ Deno.serve(async (req) => {
         const reportRecipients = divisionMembers.filter(m => m.receive_division_report === true);
 
         for (const recipient of reportRecipients) {
-          const subject = `Week ${currentTraining.week_number} Safety Training Report — ${division} Division`;
+          const subject = `Week ${currentTraining.week_number} Safety Training Report - ${division} Division`;
           const bodyText = `Please find attached the Week ${currentTraining.week_number} training completion report for the ${division} division. This report reflects completions as of ${generatedAtFormatted}.`;
 
           const boundary = `----=_Part_${Date.now()}_${Math.random().toString(36).substr(2)}`;
