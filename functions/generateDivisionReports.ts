@@ -115,7 +115,7 @@ Deno.serve(async (req) => {
       doc.text('AEROSEAL SAFETY TRAINING', margin, y);
       y += 5;
       doc.text(
-        `Week ${currentTraining.week_number}  ·  Week of ${weekOf}  ·  Generated ${generatedDateShort}`,
+        `Week ${currentTraining.week_number}  ·  Week of ${weekOfFormatted}  ·  Generated ${generatedDateShort}`,
         margin, y
       );
 
