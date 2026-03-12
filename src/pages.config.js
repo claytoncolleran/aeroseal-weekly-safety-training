@@ -47,20 +47,20 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import About from './pages/About';
 import AdminDashboard from './pages/AdminDashboard';
-import Training from './pages/Training';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
-import About from './pages/About';
+import Training from './pages/Training';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "About": About,
     "AdminDashboard": AdminDashboard,
-    "Training": Training,
     "PrivacyPolicy": PrivacyPolicy,
     "TermsOfService": TermsOfService,
-    "About": About,
+    "Training": Training,
 }
 
 export const pagesConfig = {
