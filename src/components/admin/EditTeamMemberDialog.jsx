@@ -28,6 +28,7 @@ export default function EditTeamMemberDialog({ open, onOpenChange, member, onSav
       setEmail(member.email || '');
       setPhone(member.phone || '');
       setDivision(member.division || '');
+      setReceiveDivisionReport(member.receive_division_report || false);
       setError('');
     }
   }, [member]);
