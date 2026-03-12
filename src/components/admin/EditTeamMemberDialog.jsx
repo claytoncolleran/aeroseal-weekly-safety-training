@@ -11,6 +11,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Loader2 } from 'lucide-react';
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function EditTeamMemberDialog({ open, onOpenChange, member, onSave }) {
   const [name, setName] = useState('');
