@@ -83,83 +83,135 @@ Deno.serve(async (req) => {
 
       // --- Generate PDF ---
       const doc = new jsPDF();
+      const pageW = 210;
+      const margin = 15;
+      const colW = (pageW - margin * 2 - 6) / 2;
 
-      // Header
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'bold');
-      doc.text(`Aeroseal Safety Training — ${division} Division`, 105, 22, { align: 'center' });
-
-      // Subheader
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(80, 80, 80);
-      doc.text(
-        `Week ${currentTraining.week_number}  |  Week of ${weekOf}  |  Generated ${generatedDateShort}`,
-        105, 30, { align: 'center' }
-      );
-      doc.setTextColor(0, 0, 0);
-
-      // Divider
-      doc.setLineWidth(0.5);
-      doc.line(15, 34, 195, 34);
-
-      // Table header row
-      let y = 44;
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'bold');
-      doc.setFillColor(240, 240, 240);
-      doc.rect(15, y - 6, 180, 8, 'F');
-      doc.text('Team Member', 20, y);
-      doc.text('Status', 160, y);
-      doc.setFont('helvetica', 'normal');
-
-      y += 6;
-
-      let completedCount = 0;
-
-      for (const member of divisionMembers) {
-        if (y > 270) {
-          doc.addPage();
-          y = 20;
-        }
-        const completed = completedMemberIds.has(member.id);
-        if (completed) completedCount++;
-
-        // Alternate row shading
-        if (divisionMembers.indexOf(member) % 2 === 0) {
-          doc.setFillColor(250, 250, 250);
-          doc.rect(15, y - 5, 180, 8, 'F');
-        }
-
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(0, 0, 0);
-        doc.text(member.name, 20, y);
-
-        if (completed) {
-          doc.setTextColor(22, 163, 74); // green
-          doc.text('✓  Completed', 158, y);
-        } else {
-          doc.setTextColor(220, 38, 38); // red
-          doc.text('✗  Not Completed', 155, y);
-        }
-        doc.setTextColor(0, 0, 0);
-
-        y += 9;
-      }
-
-      // Footer
-      y += 4;
-      doc.setLineWidth(0.5);
-      doc.line(15, y, 195, y);
-      y += 8;
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
+      const completedMembers = divisionMembers.filter(m => completedMemberIds.has(m.id));
+      const notCompletedMembers = divisionMembers.filter(m => !completedMemberIds.has(m.id));
+      const completedCount = completedMembers.length;
       const total = divisionMembers.length;
       const rate = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+
+      // --- TOP ACCENT BAR ---
+      const barH = 5;
+      const greenW = total > 0 ? (pageW * completedCount / total) : 0;
+      doc.setFillColor(22, 163, 74);
+      doc.rect(0, 0, greenW, barH, 'F');
+      doc.setFillColor(220, 38, 38);
+      doc.rect(greenW, 0, pageW - greenW, barH, 'F');
+
+      // --- HEADER ---
+      let y = barH + 10;
+      doc.setFontSize(18);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(15, 23, 42);
+      doc.text(`${division.toUpperCase()} DIVISION`, margin, y);
+      y += 7;
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text('AEROSEAL SAFETY TRAINING', margin, y);
+      y += 5;
       doc.text(
-        `Total Completed: ${completedCount} of ${total}  |  Completion Rate: ${rate}%`,
-        105, y, { align: 'center' }
+        `Week ${currentTraining.week_number}  ·  Week of ${weekOf}  ·  Generated ${generatedDateShort}`,
+        margin, y
+      );
+
+      // Completion rate block (top-right)
+      doc.setFontSize(28);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(rate >= 100 ? 22 : rate >= 50 ? 15 : 220, rate >= 100 ? 163 : rate >= 50 ? 23 : 38, rate >= 100 ? 74 : rate >= 50 ? 42 : 38);
+      doc.text(`${rate}%`, pageW - margin, barH + 12, { align: 'right' });
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text(`${completedCount} of ${total} members`, pageW - margin, barH + 20, { align: 'right' });
+
+      // --- DIVIDER ---
+      y += 7;
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.5);
+      doc.line(margin, y, pageW - margin, y);
+      y += 8;
+
+      // --- TWO-COLUMN SECTION HEADERS ---
+      const leftX = margin;
+      const rightX = margin + colW + 6;
+
+      // Left column header — green
+      doc.setFillColor(240, 253, 244);
+      doc.rect(leftX, y - 5, colW, 9, 'F');
+      doc.setDrawColor(22, 163, 74);
+      doc.setLineWidth(0.8);
+      doc.line(leftX, y - 5, leftX, y + 4);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(21, 128, 61);
+      doc.text(`✓ COMPLETED (${completedCount})`, leftX + 3, y);
+
+      // Right column header — red
+      doc.setFillColor(255, 245, 245);
+      doc.rect(rightX, y - 5, colW, 9, 'F');
+      doc.setDrawColor(220, 38, 38);
+      doc.line(rightX, y - 5, rightX, y + 4);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(185, 28, 28);
+      doc.text(`✗ NOT COMPLETED (${notCompletedMembers.length})`, rightX + 3, y);
+
+      y += 8;
+
+      // --- MEMBER ROWS ---
+      const rowH = 7;
+      const maxRows = Math.max(completedMembers.length, notCompletedMembers.length);
+
+      for (let i = 0; i < maxRows; i++) {
+        if (y > 272) {
+          doc.addPage();
+          y = 15;
+        }
+
+        // Alternating background
+        if (i % 2 === 0) {
+          doc.setFillColor(248, 250, 252);
+          doc.rect(leftX, y - 5, colW, rowH, 'F');
+          doc.rect(rightX, y - 5, colW, rowH, 'F');
+        }
+
+        // Completed member (left)
+        if (i < completedMembers.length) {
+          doc.setFontSize(9.5);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(22, 101, 52);
+          doc.text(`✓  ${completedMembers[i].name}`, leftX + 3, y);
+        }
+
+        // Not completed member (right — bold red)
+        if (i < notCompletedMembers.length) {
+          doc.setFontSize(9.5);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(185, 28, 28);
+          doc.text(`✗  ${notCompletedMembers[i].name}`, rightX + 3, y);
+        }
+
+        y += rowH;
+      }
+
+      // --- FOOTER ---
+      y += 6;
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.5);
+      doc.line(margin, y, pageW - margin, y);
+      y += 7;
+      doc.setFillColor(15, 23, 42);
+      doc.rect(0, y - 3, pageW, 12, 'F');
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(148, 163, 184);
+      doc.text(
+        `Aeroseal Safety Training  —  Automated Report  —  Confidential`,
+        105, y + 4, { align: 'center' }
       );
 
       // Get PDF bytes and upload
