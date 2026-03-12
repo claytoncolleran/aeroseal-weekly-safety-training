@@ -26,6 +26,7 @@ export default function ReportScheduleCard() {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   useEffect(() => {
     base44.entities.ReportScheduleSettings.list()
