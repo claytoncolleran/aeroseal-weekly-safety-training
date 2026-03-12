@@ -71,7 +71,9 @@ Deno.serve(async (req) => {
       accessToken = connection.accessToken;
     }
 
-    const divisions = ['East', 'Midwest', 'Southwest', 'Mountain'];
+    const divisions = (requestedDivisions && requestedDivisions.length > 0)
+      ? requestedDivisions
+      : ['East', 'Midwest', 'Southwest', 'Mountain'];
     const results = [];
 
     for (const division of divisions) {
