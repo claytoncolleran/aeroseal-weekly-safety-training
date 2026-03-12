@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({}));
-    const { generated_by = 'Scheduled', send_email = true } = body;
+    const { generated_by = 'Scheduled', send_email = true, divisions: requestedDivisions } = body;
 
     // For scheduled runs, check if the feature is enabled
     if (generated_by === 'Scheduled') {
