@@ -195,6 +195,18 @@ export default function AdminDashboard() {
     },
   });
 
+  const handleGenerateReports = async () => {
+    setGeneratingReports(true);
+    try {
+      await base44.functions.invoke('generateDivisionReports', { generated_by: 'Manual', send_email: false });
+      toast.success('Reports generated successfully. 4 division reports have been saved to the Reports Archive.');
+    } catch (err) {
+      toast.error(err?.message || 'Failed to generate reports. Please try again.');
+    } finally {
+      setGeneratingReports(false);
+    }
+  };
+
   const isLoading = schedulesLoading || membersLoading || completionsLoading;
 
   if (isLoading) {
