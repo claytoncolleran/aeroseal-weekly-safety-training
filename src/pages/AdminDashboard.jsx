@@ -238,6 +238,23 @@ export default function AdminDashboard() {
               <Download className="w-4 h-4 mr-2" />
               Download Training Records
             </Button>
+            <Button
+              variant="outline"
+              onClick={handleGenerateReports}
+              disabled={generatingReports}
+            >
+              {generatingReports ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Generating division reports...
+                </>
+              ) : (
+                <>
+                  <FileBarChart2 className="w-4 h-4 mr-2" />
+                  Generate Reports Now
+                </>
+              )}
+            </Button>
             <Button 
               onClick={() => setAddDialogOpen(true)}
               className="bg-emerald-600 hover:bg-emerald-700"
