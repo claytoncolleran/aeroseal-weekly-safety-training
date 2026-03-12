@@ -49,6 +49,7 @@ export default function EditTeamMemberDialog({ open, onOpenChange, member, onSav
         email: email.trim(),
         phone: phone.trim() || undefined,
         division: division || undefined,
+        receive_division_report: receiveDivisionReport,
       });
       onOpenChange(false);
     } catch (err) {
