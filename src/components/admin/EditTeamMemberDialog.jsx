@@ -109,6 +109,18 @@ export default function EditTeamMemberDialog({ open, onOpenChange, member, onSav
               </SelectContent>
             </Select>
           </div>
+          {division && (
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="edit-division-report"
+                checked={receiveDivisionReport}
+                onCheckedChange={(checked) => setReceiveDivisionReport(!!checked)}
+              />
+              <Label htmlFor="edit-division-report" className="text-sm font-normal cursor-pointer">
+                Send this person the weekly Thursday division report
+              </Label>
+            </div>
+          )}
           {error && (
             <p className="text-red-500 text-sm">{error}</p>
           )}
