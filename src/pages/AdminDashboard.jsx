@@ -697,6 +697,11 @@ export default function AdminDashboard() {
         member={editingMember}
         onSave={(id, data) => editMemberMutation.mutateAsync({ id, data })}
       />
+      <GenerateReportsModal
+        open={generateModalOpen}
+        onOpenChange={setGenerateModalOpen}
+        onGenerate={handleGenerateReports}
+      />
     </div>
   );
 }
