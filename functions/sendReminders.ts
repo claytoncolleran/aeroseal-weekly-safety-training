@@ -73,36 +73,37 @@ Deno.serve(async (req) => {
         ? `⚠️ Final Reminder: Complete Your Safety Training Today`
         : `Reminder: Complete Your Safety Training`;
 
-      const firstName = member.name.split(' ')[0];
-      const videoUrl = currentTraining.video_link || `${appUrl}/Training`;
+      const bodyText = `Hello ${member.name},
 
-      const bodyHtml = `<p>Hello ${firstName},</p>
-<p>${reminderType === 'new'
+${reminderType === 'new'
   ? `A new safety training video is available for Week ${currentTraining.week_number}.`
   : reminderType === 'final'
   ? `This is your final reminder for this week. Please complete your safety training today.`
   : `This is a reminder to complete your safety training for this week.`
-}</p>
-<p><strong>Training:</strong> ${currentTraining.video_title}</p>
-<p><a href="${videoUrl}">Watch the Video</a></p>
-<p>Please watch the video and submit the completion form as soon as possible.</p>
-<p>Thank you for prioritizing safety!</p>
-<p>Safety Training Team</p>`;
+}
+
+Training: ${currentTraining.video_title}
+
+Watch the video: ${currentTraining.video_link}
+
+Complete your training form: ${appUrl}/Training
+
+Please watch the video and submit the completion form as soon as possible.
+
+Thank you for prioritizing safety!
+
+Safety Training Team`.trim();
 
       // Send email via Gmail
       const emailLines = [
         `To: ${member.email}`,
         `Subject: ${subject}`,
-        `MIME-Version: 1.0`,
-        `Content-Type: text/html; charset=utf-8`,
+        `Content-Type: text/plain; charset=utf-8`,
         ``,
-        bodyHtml,
+        bodyText,
       ];
       const rawEmail = emailLines.join('\r\n');
-      const encodedBytes = new TextEncoder().encode(rawEmail);
-      let binary = '';
-      for (const byte of encodedBytes) { binary += String.fromCharCode(byte); }
-      const encodedEmail = btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      const encodedEmail = btoa(rawEmail).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
       try {
         const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
