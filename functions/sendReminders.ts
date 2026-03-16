@@ -67,40 +67,36 @@ Deno.serve(async (req) => {
     let smsSentCount = 0;
 
     for (const member of pendingMembers) {
+      const firstName = member.name.split(' ')[0];
+
       const subject = reminderType === 'new'
         ? `New Safety Training Available: Week ${currentTraining.week_number}`
         : reminderType === 'final'
         ? `⚠️ Final Reminder: Complete Your Safety Training Today`
         : `Reminder: Complete Your Safety Training`;
 
-      const bodyText = `Hello ${member.name},
+      const introLine = reminderType === 'new'
+        ? `A new safety training video is available for Week ${currentTraining.week_number}.`
+        : reminderType === 'final'
+        ? `This is your final reminder for this week. Please complete your safety training today.`
+        : `This is a reminder to complete your safety training for this week.`;
 
-${reminderType === 'new'
-  ? `A new safety training video is available for Week ${currentTraining.week_number}.`
-  : reminderType === 'final'
-  ? `This is your final reminder for this week. Please complete your safety training today.`
-  : `This is a reminder to complete your safety training for this week.`
-}
-
-Training: ${currentTraining.video_title}
-
-Watch the video: ${currentTraining.video_link}
-
-Complete your training form: ${appUrl}/Training
-
-Please watch the video and submit the completion form as soon as possible.
-
-Thank you for prioritizing safety!
-
-Safety Training Team`.trim();
+      const bodyHtml = `<p>Hello ${firstName},</p>
+<p>${introLine}</p>
+<p>Training: ${currentTraining.video_title}</p>
+<p><a href="${appUrl}/Training">Complete Your Training Form</a></p>
+<p>Please watch the video and submit the completion form as soon as possible.</p>
+<p>Thank you for prioritizing safety!</p>
+<p>Aeroseal Safety Team</p>`;
 
       // Send email via Gmail
       const emailLines = [
         `To: ${member.email}`,
         `Subject: ${subject}`,
-        `Content-Type: text/plain; charset=utf-8`,
+        `MIME-Version: 1.0`,
+        `Content-Type: text/html; charset=utf-8`,
         ``,
-        bodyText,
+        bodyHtml,
       ];
       const rawEmail = emailLines.join('\r\n');
       const encodedEmail = btoa(rawEmail).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
