@@ -43,8 +43,7 @@ Deno.serve(async (req) => {
     const bodyHtml = `<p>Hello ${first_name},</p>
 <p>${introLine}</p>
 <p>Training: ${videoTitle}</p>
-<p><a href="${appUrl}/Training">Complete Your Training Form</a></p>
-<p>Please watch the video and submit the completion form as soon as possible.</p>
+<p><a href="${appUrl}/Training">Complete your training</a></p>
 <p>Thank you for prioritizing safety!</p>
 <p>Aeroseal Safety Team</p>`;
 
