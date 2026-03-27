@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 import { jsPDF } from 'npm:jspdf@4.0.0';
+import { Resend } from 'npm:resend';
 
 Deno.serve(async (req) => {
   try {
@@ -65,12 +66,7 @@ Deno.serve(async (req) => {
     const generatedDateShort = new Date().toLocaleDateString('en-US', { timeZone: 'America/New_York', month: '2-digit', day: '2-digit', year: 'numeric' });
     const weekOfFormatted = (() => { const [y, m, d] = weekOf.split('-'); return `${m}/${d}/${y}`; })();
 
-    // Get Gmail access token if emailing
-    let accessToken = null;
-    if (send_email) {
-      const connection = await base44.asServiceRole.connectors.getConnection('gmail');
-      accessToken = connection.accessToken;
-    }
+    const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
     const divisions = (requestedDivisions && requestedDivisions.length > 0)
       ? requestedDivisions
@@ -235,63 +231,32 @@ Deno.serve(async (req) => {
       });
 
       // Send emails if requested
-      if (send_email && accessToken) {
+      if (send_email) {
         const reportRecipients = divisionMembers.filter(m => m.receive_division_report === true);
 
         for (const recipient of reportRecipients) {
           const subject = `Week ${currentTraining.week_number} Safety Training Report - ${division} Division`;
-          const bodyText = `Please find attached the Week ${currentTraining.week_number} training completion report for the ${division} division. This report reflects completions as of ${generatedAtFormatted}.`;
+          const bodyHtml = `<p>Hello,</p>
+<p>Please find attached the Week ${currentTraining.week_number} training completion report for the ${division} division.</p>
+<p>This report reflects completions as of ${generatedAtFormatted}.</p>
+<p><strong>Summary:</strong> ${completedCount} of ${total} members completed (${rate}%)</p>
+<p>Aeroseal Safety Team</p>`;
 
-          const boundary = `----=_Part_${Date.now()}_${Math.random().toString(36).substr(2)}`;
-
-          // Chunk PDF base64 at 76 chars per line (MIME standard)
-          const chunkedPdf = pdfBase64.match(/.{1,76}/g).join('\r\n');
-
-          const mimeLines = [
-            `To: ${recipient.email}`,
-            `Subject: ${subject}`,
-            `MIME-Version: 1.0`,
-            `Content-Type: multipart/mixed; boundary="${boundary}"`,
-            ``,
-            `--${boundary}`,
-            `Content-Type: text/plain; charset=utf-8`,
-            `Content-Transfer-Encoding: 7bit`,
-            ``,
-            bodyText,
-            ``,
-            `--${boundary}`,
-            `Content-Type: application/pdf; name="${fileName}"`,
-            `Content-Transfer-Encoding: base64`,
-            `Content-Disposition: attachment; filename="${fileName}"`,
-            ``,
-            chunkedPdf,
-            ``,
-            `--${boundary}--`,
-          ];
-
-          const mimeMessage = mimeLines.join('\r\n');
-
-          // Safe base64url encode for Gmail API
-          const encodedBytes = new TextEncoder().encode(mimeMessage);
-          let binary = '';
-          for (const byte of encodedBytes) {
-            binary += String.fromCharCode(byte);
-          }
-          const encodedEmail = btoa(binary)
-            .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
-          const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ raw: encodedEmail }),
+          const { error } = await resend.emails.send({
+            from: 'Aeroseal Safety Team <notifications@aeroseal.com>',
+            to: recipient.email,
+            subject: subject,
+            html: bodyHtml,
+            attachments: [
+              {
+                filename: fileName,
+                content: pdfBase64,
+              },
+            ],
           });
 
-          if (!res.ok) {
-            const err = await res.text();
-            console.error(`Failed to send email to ${recipient.email}:`, err);
+          if (error) {
+            console.error(`Failed to send email to ${recipient.email}:`, error);
           } else {
             console.log(`Sent report email to ${recipient.email} for ${division}`);
           }
