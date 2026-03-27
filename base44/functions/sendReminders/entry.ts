@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { Resend } from 'npm:resend';
 
 Deno.serve(async (req) => {
   try {
@@ -57,9 +58,7 @@ Deno.serve(async (req) => {
 
     const appUrl = Deno.env.get('APP_URL') || 'https://your-app-url.base44.app';
 
-    // Get Gmail access token
-    const accessToken = await base44.asServiceRole.connectors.getAccessToken('gmail');
-
+    const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
     const telnyxApiKey = Deno.env.get('TELNYX_API_KEY');
     const telnyxFromNumber = Deno.env.get('TELNYX_FROM_NUMBER');
 
@@ -88,31 +87,16 @@ Deno.serve(async (req) => {
 <p>Thank you for prioritizing safety!</p>
 <p>Aeroseal Safety Team</p>`;
 
-      // Send email via Gmail
-      const emailLines = [
-        `To: ${member.email}`,
-        `Subject: ${subject}`,
-        `MIME-Version: 1.0`,
-        `Content-Type: text/html; charset=utf-8`,
-        ``,
-        bodyHtml,
-      ];
-      const rawEmail = emailLines.join('\r\n');
-      const encodedEmail = btoa(rawEmail).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
       try {
-        const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ raw: encodedEmail }),
+        const { error } = await resend.emails.send({
+          from: 'Aeroseal Safety Team <notifications@aeroseal.com>',
+          to: member.email,
+          subject: subject,
+          html: bodyHtml,
         });
 
-        if (!res.ok) {
-          const err = await res.text();
-          console.error(`Failed to send email to ${member.email}:`, err);
+        if (error) {
+          console.error(`Failed to send email to ${member.email}:`, error);
         } else {
           emailSentCount++;
         }

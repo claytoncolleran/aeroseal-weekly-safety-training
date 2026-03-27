@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { Resend } from 'npm:resend';
 
 Deno.serve(async (req) => {
   try {
@@ -26,7 +27,7 @@ Deno.serve(async (req) => {
     const videoTitle = currentTraining?.video_title || '[Current Week Video Title]';
     const weekNumber = currentTraining?.week_number || '?';
 
-    const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
+    const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
     const subject = reminder_type === 'new'
       ? `New Safety Training Available: Week ${weekNumber}`
@@ -47,32 +48,15 @@ Deno.serve(async (req) => {
 <p>Thank you for prioritizing safety!</p>
 <p>Aeroseal Safety Team</p>`;
 
-    const emailLines = [
-      `To: ${to}`,
-      `Subject: ${subject}`,
-      `MIME-Version: 1.0`,
-      `Content-Type: text/html; charset=utf-8`,
-      ``,
-      bodyHtml,
-    ];
-    const rawEmail = emailLines.join('\r\n');
-    const encodedBytes = new TextEncoder().encode(rawEmail);
-    let binary = '';
-    for (const byte of encodedBytes) binary += String.fromCharCode(byte);
-    const encodedEmail = btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
-    const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ raw: encodedEmail }),
+    const { error } = await resend.emails.send({
+      from: 'Aeroseal Safety Team <notifications@aeroseal.com>',
+      to: to,
+      subject: subject,
+      html: bodyHtml,
     });
 
-    if (!res.ok) {
-      const err = await res.text();
-      return Response.json({ error: err }, { status: 500 });
+    if (error) {
+      return Response.json({ error }, { status: 500 });
     }
 
     return Response.json({ success: true, sent_to: to });
