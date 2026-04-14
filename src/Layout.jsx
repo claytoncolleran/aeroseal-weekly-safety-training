@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { 
-  Shield, PlayCircle, LayoutDashboard, LogOut, Menu, X, User
+  Shield, PlayCircle, LayoutDashboard, LogOut, Menu, X, User, Settings
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -19,7 +19,10 @@ export default function Layout({ children, currentPageName }) {
 
   const navItems = [
     { name: 'Training', icon: PlayCircle, page: 'Training' },
-    ...(isAdmin ? [{ name: 'Admin Dashboard', icon: LayoutDashboard, page: 'AdminDashboard' }] : []),
+    ...(isAdmin ? [
+      { name: 'Admin Dashboard', icon: LayoutDashboard, page: 'AdminDashboard' },
+      { name: 'Configure', icon: Settings, page: 'Configure' },
+    ] : []),
   ];
 
   return (

@@ -16,12 +16,9 @@ import TeamMemberCard from '@/components/admin/TeamMemberCard';
 import AddTeamMemberDialog from '@/components/admin/AddTeamMemberDialog';
 import EditTeamMemberDialog from '@/components/admin/EditTeamMemberDialog';
 import WeekSelector from '@/components/admin/WeekSelector';
-import VideoScheduleTab from '@/components/schedule/VideoScheduleTab';
 import DivisionReportsTab from '@/components/admin/DivisionReportsTab';
 import ExportCsvButton from '@/components/admin/ExportCsvButton';
 import DownloadTrainingRecordDialog from '@/components/admin/DownloadTrainingRecordDialog';
-import ReportScheduleCard from '@/components/admin/ReportScheduleCard';
-import ReminderScheduleCard from '@/components/admin/ReminderScheduleCard';
 import GenerateReportsModal from '@/components/admin/GenerateReportsModal';
 
 export default function AdminDashboard() {
@@ -363,19 +360,12 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
-        {/* Report Schedule Settings (admin only) */}
-        <ReportScheduleCard />
-
-        {/* Reminder Schedule Settings (admin only) */}
-        <ReminderScheduleCard />
-
         {/* Team Status */}
         <Tabs defaultValue="status" className="space-y-6">
           <TabsList className="bg-white border">
             <TabsTrigger value="status">Completion Status</TabsTrigger>
             <TabsTrigger value="history">Completion History</TabsTrigger>
             <TabsTrigger value="team">Team Members</TabsTrigger>
-            <TabsTrigger value="schedule">Video Schedule</TabsTrigger>
             <TabsTrigger value="reports">Division Reports</TabsTrigger>
           </TabsList>
 
@@ -674,9 +664,6 @@ export default function AdminDashboard() {
                 )}
               </CardContent>
             </Card>
-          </TabsContent>
-          <TabsContent value="schedule">
-            <VideoScheduleTab />
           </TabsContent>
           <TabsContent value="reports">
             <DivisionReportsTab />
