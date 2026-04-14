@@ -32,9 +32,7 @@ export default function AdminDashboard() {
   // Completion Status tab filters
   const [divisionFilter, setDivisionFilter] = useState('all');
   const [sortOrder, setSortOrder] = useState('alpha');
-  // Completion History tab filters
-  const [historyDivisionFilter, setHistoryDivisionFilter] = useState('all');
-  const [historySortOrder, setHistorySortOrder] = useState('recent');
+
   // Team Members tab filters
   const [teamDivisionFilter, setTeamDivisionFilter] = useState('all');
   const [teamSortOrder, setTeamSortOrder] = useState('alpha');
@@ -116,22 +114,7 @@ export default function AdminDashboard() {
     });
   }, [activeMembers, divisionFilter, sortOrder, weekCompletions]);
 
-  // Filtered/sorted completions for History tab
-  const filteredAndSortedHistory = useMemo(() => {
-    // Enrich completions with member division for filtering
-    const enriched = weekCompletions.map(c => {
-      const member = teamMembers.find(m => m.id === c.team_member_id);
-      return { ...c, division: member?.division || '' };
-    });
-    let filtered = historyDivisionFilter === 'all'
-      ? enriched
-      : enriched.filter(c => c.division === historyDivisionFilter);
 
-    return [...filtered].sort((a, b) => {
-      if (historySortOrder === 'alpha') return a.team_member_name.localeCompare(b.team_member_name);
-      return new Date(b.completion_date) - new Date(a.completion_date);
-    });
-  }, [weekCompletions, teamMembers, historyDivisionFilter, historySortOrder]);
 
   // Filtered/sorted members for Team Members tab
   const filteredAndSortedTeamMembers = useMemo(() => {
@@ -345,25 +328,19 @@ export default function AdminDashboard() {
         </div>
 
         {/* Team Status */}
-        <Tabs defaultValue="status" className="space-y-0">
+        <Tabs defaultValue="team" className="space-y-0">
           <TabsList className="w-full h-auto bg-white border border-slate-200 rounded-xl rounded-b-none p-0 gap-0 overflow-hidden">
-            <TabsTrigger
-              value="status"
-              className="flex-1 rounded-none py-3 text-sm font-medium border-b-2 border-transparent data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700 data-[state=active]:bg-emerald-50 data-[state=inactive]:text-slate-500 data-[state=inactive]:hover:bg-slate-50 transition-colors"
-            >
-              Completion Status
-            </TabsTrigger>
-            <TabsTrigger
-              value="history"
-              className="flex-1 rounded-none py-3 text-sm font-medium border-b-2 border-transparent data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700 data-[state=active]:bg-emerald-50 data-[state=inactive]:text-slate-500 data-[state=inactive]:hover:bg-slate-50 transition-colors"
-            >
-              Completion History
-            </TabsTrigger>
             <TabsTrigger
               value="team"
               className="flex-1 rounded-none py-3 text-sm font-medium border-b-2 border-transparent data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700 data-[state=active]:bg-emerald-50 data-[state=inactive]:text-slate-500 data-[state=inactive]:hover:bg-slate-50 transition-colors"
             >
               Team Members
+            </TabsTrigger>
+            <TabsTrigger
+              value="status"
+              className="flex-1 rounded-none py-3 text-sm font-medium border-b-2 border-transparent data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700 data-[state=active]:bg-emerald-50 data-[state=inactive]:text-slate-500 data-[state=inactive]:hover:bg-slate-50 transition-colors"
+            >
+              Completion Status
             </TabsTrigger>
             <TabsTrigger
               value="reports"
@@ -459,107 +436,6 @@ export default function AdminDashboard() {
                         onDelete={(m) => deleteMemberMutation.mutate(m.id)}
                         onEdit={handleEditMember}
                       />
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="history" className="mt-0">
-            <Card className="border border-slate-200 border-t-0 rounded-xl rounded-t-none shadow-sm">
-              <CardHeader>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <CardTitle className="text-lg">Week {selectedWeek} Completions</CardTitle>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Filter className="w-4 h-4 text-slate-400 shrink-0" />
-                    <Select value={historyDivisionFilter} onValueChange={setHistoryDivisionFilter}>
-                      <SelectTrigger className="w-36 h-8 text-sm">
-                        <SelectValue placeholder="Division" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Divisions</SelectItem>
-                        <SelectItem value="East">East</SelectItem>
-                        <SelectItem value="Midwest">Midwest</SelectItem>
-                        <SelectItem value="Southwest">Southwest</SelectItem>
-                        <SelectItem value="Mountain">Mountain</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <ArrowUpDown className="w-4 h-4 text-slate-400 shrink-0" />
-                    <Select value={historySortOrder} onValueChange={setHistorySortOrder}>
-                      <SelectTrigger className="w-44 h-8 text-sm">
-                        <SelectValue placeholder="Sort" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="recent">Most Recently Completed</SelectItem>
-                        <SelectItem value="alpha">Alphabetical</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <ExportCsvButton
-                      currentViewData={filteredAndSortedHistory.map(c => ({
-                        Name: c.team_member_name,
-                        Division: c.division,
-                        'Week Number': c.week_number,
-                        'Video Title': c.video_title,
-                        Description: c.description,
-                        'Completion Date': c.completion_date ? format(new Date(c.completion_date), 'MMM d, yyyy h:mm a') : '',
-                        'Marked by Admin': c.marked_by_admin ? 'Yes' : 'No',
-                      }))}
-                      allData={completions.map(c => {
-                        const member = teamMembers.find(m => m.id === c.team_member_id);
-                        return {
-                          Name: c.team_member_name,
-                          Division: member?.division || '',
-                          'Week Number': c.week_number,
-                          'Video Title': c.video_title,
-                          Description: c.description,
-                          'Completion Date': c.completion_date ? format(new Date(c.completion_date), 'MMM d, yyyy h:mm a') : '',
-                          'Marked by Admin': c.marked_by_admin ? 'Yes' : 'No',
-                        };
-                      })}
-                      filenamePrefix={`week${selectedWeek}_completions`}
-                    />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {weekCompletions.length === 0 ? (
-                  <div className="text-center py-12 text-slate-500">
-                    <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No completions recorded for this week yet.</p>
-                  </div>
-                ) : filteredAndSortedHistory.length === 0 ? (
-                  <div className="text-center py-12 text-slate-500">
-                    <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No completions for this division.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {filteredAndSortedHistory.map((completion) => (
-                      <div 
-                        key={completion.id}
-                        className="p-4 bg-slate-50 rounded-xl border border-slate-100"
-                      >
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <p className="font-medium text-slate-800">{completion.team_member_name}</p>
-                            {completion.division && (
-                              <p className="text-xs text-slate-400">{completion.division}</p>
-                            )}
-                            <p className="text-sm text-slate-500">
-                              {format(new Date(completion.completion_date), 'MMM d, yyyy h:mm a')}
-                            </p>
-                          </div>
-                          {completion.marked_by_admin && (
-                            <Badge variant="outline" className="text-xs">
-                              Marked by Admin
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-sm text-slate-600 mt-2 italic">
-                          "{completion.description}"
-                        </p>
-                      </div>
                     ))}
                   </div>
                 )}
