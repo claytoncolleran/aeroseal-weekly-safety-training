@@ -74,12 +74,12 @@ export default function AdminDashboard() {
     return current;
   }, [schedules]);
 
-  // Set initial selected week
+  // Set initial selected week — wait until schedules are loaded
   useEffect(() => {
-    if (selectedWeek === null && currentWeekNumber) {
+    if (selectedWeek === null && schedules.length > 0) {
       setSelectedWeek(currentWeekNumber);
     }
-  }, [currentWeekNumber, selectedWeek]);
+  }, [currentWeekNumber, schedules, selectedWeek]);
 
   const currentSchedule = useMemo(() => {
     return schedules.find(s => s.week_number === selectedWeek);
