@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
 
     for (const division of divisions) {
       const divisionMembers = allTeamMembers
-        .filter(m => m.is_active !== false && m.division === division)
+        .filter(m => m.is_active !== false && m.on_leave !== true && m.division === division)
         .sort((a, b) => a.name.localeCompare(b.name));
 
       // --- Generate PDF ---

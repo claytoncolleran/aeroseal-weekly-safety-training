@@ -1,0 +1,47 @@
+{
+  "name": "TeamMember",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Team member's full name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email address for notifications"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "division": {
+      "type": "string",
+      "enum": [
+        "East",
+        "Midwest",
+        "Southwest",
+        "Mountain"
+      ],
+      "description": "Division the team member belongs to"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the team member is active"
+    },
+    "on_leave": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the team member is currently on leave (excluded from reports and reminders)"
+    },
+    "receive_division_report": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this team member should receive the weekly Thursday division completion report via email"
+    }
+  },
+  "required": [
+    "name",
+    "email"
+  ]
+}

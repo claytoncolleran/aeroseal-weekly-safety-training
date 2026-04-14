@@ -19,6 +19,7 @@ export default function EditTeamMemberDialog({ open, onOpenChange, member, onSav
   const [phone, setPhone] = useState('');
   const [division, setDivision] = useState('');
   const [receiveDivisionReport, setReceiveDivisionReport] = useState(false);
+  const [onLeave, setOnLeave] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -29,6 +30,7 @@ export default function EditTeamMemberDialog({ open, onOpenChange, member, onSav
       setPhone(member.phone || '');
       setDivision(member.division || '');
       setReceiveDivisionReport(member.receive_division_report || false);
+      setOnLeave(member.on_leave || false);
       setError('');
     }
   }, [member]);
@@ -50,6 +52,7 @@ export default function EditTeamMemberDialog({ open, onOpenChange, member, onSav
         phone: phone.trim() || undefined,
         division: division || undefined,
         receive_division_report: receiveDivisionReport,
+        on_leave: onLeave,
       });
       onOpenChange(false);
     } catch (err) {
@@ -121,6 +124,16 @@ export default function EditTeamMemberDialog({ open, onOpenChange, member, onSav
               </Label>
             </div>
           )}
+          <div className="flex items-center gap-2 pt-1 border-t border-slate-100">
+            <Checkbox
+              id="edit-on-leave"
+              checked={onLeave}
+              onCheckedChange={(checked) => setOnLeave(!!checked)}
+            />
+            <Label htmlFor="edit-on-leave" className="text-sm font-normal cursor-pointer">
+              Currently on leave <span className="text-slate-400">(excluded from reports and reminders)</span>
+            </Label>
+          </div>
           {error && (
             <p className="text-red-500 text-sm">{error}</p>
           )}

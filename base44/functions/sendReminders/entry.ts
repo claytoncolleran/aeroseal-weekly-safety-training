@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
     const completedMemberIds = new Set(currentCompletions.map(c => c.team_member_id));
 
     // Find members who haven't completed
-    const activeMembers = teamMembers.filter(m => m.is_active !== false);
+    const activeMembers = teamMembers.filter(m => m.is_active !== false && m.on_leave !== true);
     const pendingMembers = activeMembers.filter(m => !completedMemberIds.has(m.id));
 
     // Determine day type for message
