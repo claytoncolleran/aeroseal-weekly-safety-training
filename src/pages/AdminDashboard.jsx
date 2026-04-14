@@ -361,16 +361,36 @@ export default function AdminDashboard() {
         </div>
 
         {/* Team Status */}
-        <Tabs defaultValue="status" className="space-y-6">
-          <TabsList className="bg-white border">
-            <TabsTrigger value="status">Completion Status</TabsTrigger>
-            <TabsTrigger value="history">Completion History</TabsTrigger>
-            <TabsTrigger value="team">Team Members</TabsTrigger>
-            <TabsTrigger value="reports">Division Reports</TabsTrigger>
+        <Tabs defaultValue="status" className="space-y-0">
+          <TabsList className="w-full h-auto bg-white border border-slate-200 rounded-xl rounded-b-none p-0 gap-0 overflow-hidden">
+            <TabsTrigger
+              value="status"
+              className="flex-1 rounded-none py-3 text-sm font-medium border-b-2 border-transparent data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700 data-[state=active]:bg-emerald-50 data-[state=inactive]:text-slate-500 data-[state=inactive]:hover:bg-slate-50 transition-colors"
+            >
+              Completion Status
+            </TabsTrigger>
+            <TabsTrigger
+              value="history"
+              className="flex-1 rounded-none py-3 text-sm font-medium border-b-2 border-transparent data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700 data-[state=active]:bg-emerald-50 data-[state=inactive]:text-slate-500 data-[state=inactive]:hover:bg-slate-50 transition-colors"
+            >
+              Completion History
+            </TabsTrigger>
+            <TabsTrigger
+              value="team"
+              className="flex-1 rounded-none py-3 text-sm font-medium border-b-2 border-transparent data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700 data-[state=active]:bg-emerald-50 data-[state=inactive]:text-slate-500 data-[state=inactive]:hover:bg-slate-50 transition-colors"
+            >
+              Team Members
+            </TabsTrigger>
+            <TabsTrigger
+              value="reports"
+              className="flex-1 rounded-none py-3 text-sm font-medium border-b-2 border-transparent data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700 data-[state=active]:bg-emerald-50 data-[state=inactive]:text-slate-500 data-[state=inactive]:hover:bg-slate-50 transition-colors"
+            >
+              Division Reports
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="status">
-            <Card className="border-0 shadow-sm">
+          <TabsContent value="status" className="mt-0">
+            <Card className="border border-slate-200 border-t-0 rounded-xl rounded-t-none shadow-sm">
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <CardTitle className="text-lg">Week {selectedWeek} Completion Status</CardTitle>
@@ -462,8 +482,8 @@ export default function AdminDashboard() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="history">
-            <Card className="border-0 shadow-sm">
+          <TabsContent value="history" className="mt-0">
+            <Card className="border border-slate-200 border-t-0 rounded-xl rounded-t-none shadow-sm">
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <CardTitle className="text-lg">Week {selectedWeek} Completions</CardTitle>
@@ -563,8 +583,8 @@ export default function AdminDashboard() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="team">
-            <Card className="border-0 shadow-sm">
+          <TabsContent value="team" className="mt-0">
+            <Card className="border border-slate-200 border-t-0 rounded-xl rounded-t-none shadow-sm">
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <CardTitle className="text-lg">All Team Members</CardTitle>
@@ -665,7 +685,7 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
-          <TabsContent value="reports">
+          <TabsContent value="reports" className="mt-0">
             <DivisionReportsTab />
           </TabsContent>
         </Tabs>
