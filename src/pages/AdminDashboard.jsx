@@ -249,23 +249,7 @@ export default function AdminDashboard() {
               <Download className="w-4 h-4 mr-2" />
               Download Training Records
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => setGenerateModalOpen(true)}
-              disabled={generatingReports}
-            >
-              {generatingReports ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <FileBarChart2 className="w-4 h-4 mr-2" />
-                  Generate Reports Now
-                </>
-              )}
-            </Button>
+
             <Button 
               onClick={() => setAddDialogOpen(true)}
               className="bg-emerald-600 hover:bg-emerald-700"
@@ -686,7 +670,10 @@ export default function AdminDashboard() {
             </Card>
           </TabsContent>
           <TabsContent value="reports" className="mt-0">
-            <DivisionReportsTab />
+            <DivisionReportsTab
+              onGenerateReports={() => setGenerateModalOpen(true)}
+              generatingReports={generatingReports}
+            />
           </TabsContent>
         </Tabs>
       </div>

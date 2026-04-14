@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileText, Download, ArrowUpDown, ArrowUp, ArrowDown, FileBarChart2 } from 'lucide-react';
+import { FileText, Download, ArrowUpDown, ArrowUp, ArrowDown, FileBarChart2, Loader2 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 
 const DIVISION_COLORS = {
@@ -34,7 +34,7 @@ function SortHeader({ label, field, sortField, sortDir, onSort }) {
   );
 }
 
-export default function DivisionReportsTab() {
+export default function DivisionReportsTab({ onGenerateReports, generatingReports }) {
   const [divisionFilter, setDivisionFilter] = useState('all');
   const [generatedByFilter, setGeneratedByFilter] = useState('all');
   const [dateFrom, setDateFrom] = useState('');
@@ -82,8 +82,9 @@ export default function DivisionReportsTab() {
   return (
     <Card className="border-0 shadow-sm">
       <CardHeader className="pb-4">
-        {/* Filters */}
-        <div className="flex flex-wrap gap-3 items-end">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-2">
+          {/* Filters */}
+          <div className="flex flex-wrap gap-3 items-end">
           <div className="space-y-1">
             <Label className="text-xs text-slate-500">Division</Label>
             <Select value={divisionFilter} onValueChange={setDivisionFilter}>
@@ -144,6 +145,25 @@ export default function DivisionReportsTab() {
               Clear filters
             </Button>
           )}
+          </div>
+
+          <Button
+            onClick={onGenerateReports}
+            disabled={generatingReports}
+            className="bg-emerald-600 hover:bg-emerald-700 shrink-0"
+          >
+            {generatingReports ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <FileBarChart2 className="w-4 h-4 mr-2" />
+                Generate Reports Now
+              </>
+            )}
+          </Button>
         </div>
       </CardHeader>
 
