@@ -20,7 +20,7 @@ export default function Layout({ children, currentPageName }) {
   const navItems = [
     { name: 'Training', icon: PlayCircle, page: 'Training' },
     ...(isAdmin ? [
-      { name: 'Admin Dashboard', icon: LayoutDashboard, page: 'AdminDashboard' },
+      { name: 'Dashboard', icon: LayoutDashboard, page: 'AdminDashboard' },
       { name: 'Configure', icon: Settings, page: 'Configure' },
     ] : []),
   ];
