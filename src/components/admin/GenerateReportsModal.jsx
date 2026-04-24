@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
-const DIVISIONS = ['East', 'Midwest', 'Southwest', 'Mountain'];
+const DIVISIONS = ['East', 'Midwest', 'Southwest', 'Mountain', 'Canada'];
 
 export default function GenerateReportsModal({ open, onOpenChange, onGenerate }) {
   const [selected, setSelected] = useState(new Set(DIVISIONS));

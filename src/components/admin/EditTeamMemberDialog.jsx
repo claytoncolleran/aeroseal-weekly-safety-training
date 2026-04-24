@@ -109,6 +109,7 @@ export default function EditTeamMemberDialog({ open, onOpenChange, member, onSav
                 <SelectItem value="Midwest">Midwest</SelectItem>
                 <SelectItem value="Southwest">Southwest</SelectItem>
                 <SelectItem value="Mountain">Mountain</SelectItem>
+                <SelectItem value="Canada">Canada</SelectItem>
               </SelectContent>
             </Select>
           </div>

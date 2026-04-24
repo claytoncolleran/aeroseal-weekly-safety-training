@@ -15,6 +15,7 @@ const DIVISION_COLORS = {
   Midwest: 'bg-purple-100 text-purple-700',
   Southwest: 'bg-orange-100 text-orange-700',
   Mountain: 'bg-emerald-100 text-emerald-700',
+  Canada: 'bg-red-100 text-red-700',
 };
 
 function SortHeader({ label, field, sortField, sortDir, onSort }) {
@@ -97,6 +98,7 @@ export default function DivisionReportsTab({ onGenerateReports, generatingReport
                 <SelectItem value="Midwest">Midwest</SelectItem>
                 <SelectItem value="Southwest">Southwest</SelectItem>
                 <SelectItem value="Mountain">Mountain</SelectItem>
+                <SelectItem value="Canada">Canada</SelectItem>
               </SelectContent>
             </Select>
           </div>

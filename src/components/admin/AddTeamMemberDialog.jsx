@@ -95,6 +95,7 @@ export default function AddTeamMemberDialog({ open, onOpenChange, onAdd }) {
                 <SelectItem value="Midwest">Midwest</SelectItem>
                 <SelectItem value="Southwest">Southwest</SelectItem>
                 <SelectItem value="Mountain">Mountain</SelectItem>
+                <SelectItem value="Canada">Canada</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -20,7 +20,8 @@
         "East",
         "Midwest",
         "Southwest",
-        "Mountain"
+        "Mountain",
+        "Canada"
       ],
       "description": "Division the team member belongs to"
     },

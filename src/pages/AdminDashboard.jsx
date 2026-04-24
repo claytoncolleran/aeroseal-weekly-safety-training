@@ -367,6 +367,7 @@ export default function AdminDashboard() {
                         <SelectItem value="Midwest">Midwest</SelectItem>
                         <SelectItem value="Southwest">Southwest</SelectItem>
                         <SelectItem value="Mountain">Mountain</SelectItem>
+                        <SelectItem value="Canada">Canada</SelectItem>
                       </SelectContent>
                     </Select>
                     <ArrowUpDown className="w-4 h-4 text-slate-400 shrink-0" />
@@ -460,6 +461,7 @@ export default function AdminDashboard() {
                         <SelectItem value="Midwest">Midwest</SelectItem>
                         <SelectItem value="Southwest">Southwest</SelectItem>
                         <SelectItem value="Mountain">Mountain</SelectItem>
+                        <SelectItem value="Canada">Canada</SelectItem>
                       </SelectContent>
                     </Select>
                     <ArrowUpDown className="w-4 h-4 text-slate-400 shrink-0" />

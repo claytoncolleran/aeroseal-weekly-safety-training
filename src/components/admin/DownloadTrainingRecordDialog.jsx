@@ -116,6 +116,7 @@ export default function DownloadTrainingRecordDialog({ open, onOpenChange, compl
                 <SelectItem value="Midwest">Midwest</SelectItem>
                 <SelectItem value="Southwest">Southwest</SelectItem>
                 <SelectItem value="Mountain">Mountain</SelectItem>
+                <SelectItem value="Canada">Canada</SelectItem>
               </SelectContent>
             </Select>
           </div>

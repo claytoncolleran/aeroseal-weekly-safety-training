@@ -1,0 +1,50 @@
+{
+  "name": "DivisionReport",
+  "type": "object",
+  "properties": {
+    "week_number": {
+      "type": "number",
+      "description": "The training week number (e.g. 10)"
+    },
+    "week_of": {
+      "type": "string",
+      "format": "date",
+      "description": "The Monday date of the training week"
+    },
+    "division": {
+      "type": "string",
+      "enum": [
+        "East",
+        "Midwest",
+        "Southwest",
+        "Mountain",
+        "Canada"
+      ],
+      "description": "The division name"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of when the report was created"
+    },
+    "generated_by": {
+      "type": "string",
+      "enum": [
+        "Scheduled",
+        "Manual"
+      ],
+      "description": "Whether the report was generated on a schedule or manually"
+    },
+    "pdf_file": {
+      "type": "string",
+      "description": "URL to the generated PDF file"
+    }
+  },
+  "required": [
+    "week_number",
+    "week_of",
+    "division",
+    "generated_at",
+    "generated_by"
+  ]
+}
