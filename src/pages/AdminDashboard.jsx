@@ -20,6 +20,7 @@ import DivisionReportsTab from '@/components/admin/DivisionReportsTab';
 import ExportCsvButton from '@/components/admin/ExportCsvButton';
 import DownloadTrainingRecordDialog from '@/components/admin/DownloadTrainingRecordDialog';
 import GenerateReportsModal from '@/components/admin/GenerateReportsModal';
+import TeamMembersTab from '@/components/admin/TeamMembersTab';
 
 export default function AdminDashboard() {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -33,9 +34,7 @@ export default function AdminDashboard() {
   const [divisionFilter, setDivisionFilter] = useState('all');
   const [sortOrder, setSortOrder] = useState('alpha');
 
-  // Team Members tab filters
-  const [teamDivisionFilter, setTeamDivisionFilter] = useState('all');
-  const [teamSortOrder, setTeamSortOrder] = useState('alpha');
+
   const queryClient = useQueryClient();
 
   const { data: schedules = [], isLoading: schedulesLoading } = useQuery({
@@ -116,16 +115,7 @@ export default function AdminDashboard() {
 
 
 
-  // Filtered/sorted members for Team Members tab
-  const filteredAndSortedTeamMembers = useMemo(() => {
-    let members = teamDivisionFilter === 'all'
-      ? teamMembers
-      : teamMembers.filter(m => m.division === teamDivisionFilter);
-    return [...members].sort((a, b) => {
-      if (teamSortOrder === 'alpha') return a.name.localeCompare(b.name);
-      return b.name.localeCompare(a.name);
-    });
-  }, [teamMembers, teamDivisionFilter, teamSortOrder]);
+
 
   // Completion stats
   const stats = useMemo(() => {
@@ -445,107 +435,11 @@ export default function AdminDashboard() {
           </TabsContent>
 
           <TabsContent value="team" className="mt-0">
-            <Card className="border border-slate-200 border-t-0 rounded-xl rounded-t-none shadow-sm">
-              <CardHeader>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <CardTitle className="text-lg">All Team Members</CardTitle>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Filter className="w-4 h-4 text-slate-400 shrink-0" />
-                    <Select value={teamDivisionFilter} onValueChange={setTeamDivisionFilter}>
-                      <SelectTrigger className="w-36 h-8 text-sm">
-                        <SelectValue placeholder="Division" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Divisions</SelectItem>
-                        <SelectItem value="East">East</SelectItem>
-                        <SelectItem value="Midwest">Midwest</SelectItem>
-                        <SelectItem value="Southwest">Southwest</SelectItem>
-                        <SelectItem value="Mountain">Mountain</SelectItem>
-                        <SelectItem value="Canada">Canada</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <ArrowUpDown className="w-4 h-4 text-slate-400 shrink-0" />
-                    <Select value={teamSortOrder} onValueChange={setTeamSortOrder}>
-                      <SelectTrigger className="w-44 h-8 text-sm">
-                        <SelectValue placeholder="Sort" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="alpha">A → Z</SelectItem>
-                        <SelectItem value="alpha_desc">Z → A</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <ExportCsvButton
-                      currentViewData={filteredAndSortedTeamMembers.map(m => ({
-                        Name: m.name,
-                        Email: m.email,
-                        Phone: m.phone || '',
-                        Division: m.division || '',
-                        Active: m.is_active !== false ? 'Yes' : 'No',
-                      }))}
-                      allData={teamMembers.map(m => ({
-                        Name: m.name,
-                        Email: m.email,
-                        Phone: m.phone || '',
-                        Division: m.division || '',
-                        Active: m.is_active !== false ? 'Yes' : 'No',
-                      }))}
-                      filenamePrefix="team_members"
-                    />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {teamMembers.length === 0 ? (
-                  <div className="text-center py-12 text-slate-500">
-                    <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No team members added yet.</p>
-                  </div>
-                ) : filteredAndSortedTeamMembers.length === 0 ? (
-                  <div className="text-center py-12 text-slate-500">
-                    <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No members in this division.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {filteredAndSortedTeamMembers.map((member) => (
-                      <div 
-                        key={member.id}
-                        className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200"
-                      >
-                        <div>
-                          <p className="font-medium text-slate-800">{member.name}</p>
-                          <p className="text-sm text-slate-500">{member.email}</p>
-                          {member.phone && (
-                            <p className="text-sm text-slate-400">{member.phone}</p>
-                          )}
-                          {member.division && (
-                            <p className="text-xs text-slate-400">{member.division}</p>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button 
-                            variant="ghost" 
-                            size="icon"
-                            className="h-8 w-8 text-slate-500 hover:text-slate-700"
-                            onClick={() => handleEditMember(member)}
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                            onClick={() => deleteMemberMutation.mutate(member.id)}
-                          >
-                            Remove
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <TeamMembersTab
+              teamMembers={teamMembers}
+              onEdit={handleEditMember}
+              onDelete={(id) => deleteMemberMutation.mutate(id)}
+            />
           </TabsContent>
           <TabsContent value="reports" className="mt-0">
             <DivisionReportsTab
